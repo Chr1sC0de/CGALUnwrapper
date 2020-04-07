@@ -1,6 +1,7 @@
 # ArteryUnwrapper
 
-CGAL wrapped code for unwrapping an artery. The code has currently been compiled for release for visual studio 2019 x64
+CGAL wrapped code for unwrapping an artery. The code has currently been compiled for release for visual studio 2019 x64.
+
 
 ## Compiling Code
 For alternative devices the code can be re-compiled using cmake https://cmake.org/. Make sure to compile in release mode as there is a significant performance difference when compared to debug mode.
