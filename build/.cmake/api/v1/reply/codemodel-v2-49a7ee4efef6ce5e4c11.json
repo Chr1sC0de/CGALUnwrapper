@@ -1,0 +1,148 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.9"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7
+					]
+				},
+				{
+					"build" : "pybind11",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.8.12"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "pybind11"
+				}
+			],
+			"name" : "Release",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "CGALMethods",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "pybind11",
+					"parentIndex" : 0
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "CGALMethods::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CGALMethods-Release-17e139106da4248275d2.json",
+					"name" : "CGALMethods",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "boundary::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-boundary-Release-1ec6070d91a92df4171f.json",
+					"name" : "boundary",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "curvature::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-curvature-Release-8518ffd43848ef24fe85.json",
+					"name" : "curvature",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "dijkstra::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-dijkstra-Release-df7b47abc50d8b1c6ae9.json",
+					"name" : "dijkstra",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "heat_method::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-heat_method-Release-362fe40c0fdc6b28facf.json",
+					"name" : "heat_method",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "parameterization::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-parameterization-Release-f92ca02b6bde24bac4c6.json",
+					"name" : "parameterization",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "property_buffer::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-property_buffer-Release-02d62b7e6f4a7299b730.json",
+					"name" : "property_buffer",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "read_write_vtk::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-read_write_vtk-Release-e425bd761b38096133ae.json",
+					"name" : "read_write_vtk",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "F:/GitHub/CGALUnwrapper/build",
+		"source" : "F:/GitHub/CGALUnwrapper"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 0
+	}
+}

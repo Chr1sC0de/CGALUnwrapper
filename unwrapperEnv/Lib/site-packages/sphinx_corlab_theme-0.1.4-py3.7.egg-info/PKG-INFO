@@ -1,0 +1,35 @@
+Metadata-Version: 1.1
+Name: sphinx-corlab-theme
+Version: 0.1.4
+Summary: Theme for documentation projects related to CoR-Lab software
+Home-page: https://code.cor-lab.org/projects/sphinx-corlab-theme
+Author: Johannes Wienke
+Author-email: jwienke@techfak.uni-bielefeld.de
+License: LGPLv3+
+Description: CoR-Lab Sphinx Theme
+        ====================
+        
+        A theme for `CoR-Lab <https://www.cor-lab.org>`_ software documentation
+        projects.
+        
+        Usage
+        -----
+        
+        In your sphinx project `conf.py` add:
+        
+        .. code:: python
+        
+           import corlab_theme
+           # ...
+           html_theme      = 'corlab_theme'
+           html_theme_path = [ corlab_theme.get_theme_dir() ]
+        
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2.6
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Development Status :: 4 - Beta
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Documentation
+Classifier: Topic :: Software Development :: Documentation

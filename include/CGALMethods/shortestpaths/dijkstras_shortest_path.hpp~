@@ -1,0 +1,29 @@
+#pragma once
+#include <CGALMethods/types.hpp>
+#include <CGAL/boost/graph/dijkstra_shortest_paths.h>
+
+
+namespace CGALMethods {
+namespace shortestpaths{
+namespace dijkstra{
+
+    namespace {
+        using namespace CGALMethods::types;
+    }
+
+    // -------------------------------------------------------------------------------------
+    PairUmapdoubleVertexindex_3 shortest_distance_predecessor_umaps(
+        Mesh_3 & mesh, Vertexindex_3 source
+    ){
+        PairUmapdoubleVertexindex_3 pair_umap_double_vertex_index;
+
+        VertexIdPropertyMap_3 vertex_index_property_map = get(boost::vertex_index, mesh);
+
+        return pair_umap_double_vertex_index;
+
+    }
+    // -------------------------------------------------------------------------------------
+
+}
+}
+}

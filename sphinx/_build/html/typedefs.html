@@ -1,0 +1,249 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>C++ Typedefs &#8212; Chris Mamon 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/corlab.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Example CMakeLists.txt" href="3_cmake.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="3_cmake.html" title="Example CMakeLists.txt"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Chris Mamon 1.0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="c-typedefs">
+<h1>C++ Typedefs<a class="headerlink" href="#c-typedefs" title="Permalink to this headline">¶</a></h1>
+<p>The CGAL library is a templates library designed with a high level of modularity in mind. As CGAL
+also integrates the template library` boost &lt;<a class="reference external" href="https://www.boost.org/">https://www.boost.org/</a>&gt;`_ it can become a hassle specifying complex
+types, for example,</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">boost</span><span class="o">::</span><span class="n">iterator_property_map</span><span class="o">&lt;</span><span class="n">IteratorVectorVertexindex_3</span><span class="p">,</span> <span class="n">VertexIdPropertyMap_3</span><span class="o">&gt;</span> <span class="n">object</span> <span class="o">=</span> <span class="n">some_code_here</span>
+</pre></div>
+</div>
+<p>Thus, to reduce the need for long winded, complex typenames, templated types have been aliased with the
+typdef specifier. Templated types can be included via,</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;CGALMethods/types.hpp&gt;</span><span class="cp"></span>
+</pre></div>
+</div>
+<p>The typdefs have been styled such that individual typenames can be delineated by camel case, for example,</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">VectorString</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>VectorString is the typename for a vector of strings.</p>
+<p>When using <a class="reference external" href="https://en.cppreference.com/w/cpp/utility/pair">std::pair</a>, if the pairs are of the same type, the typedef is eluded</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">VectorString</span><span class="p">,</span> <span class="n">VectorString</span><span class="o">&gt;</span> <span class="n">PairVectorString</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>this is the same case for unordered maps where the key is of the same type as the value.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">Vertexindex_3</span><span class="p">,</span> <span class="n">Vertexindex_3</span><span class="o">&gt;</span> <span class="n">UmapVertexindex_3</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>PairVectorString is a pair of vectors of strings.</p>
+<p>Bellow we list the typedefs defined in the types namespace of the CGALMethods namespace,</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// vectors, maps, pairs of strings</span>
+<span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">VectorString</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">VectorString</span><span class="p">,</span> <span class="n">VectorString</span><span class="o">&gt;</span> <span class="n">PairVectorString</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">PairString</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">PairString</span><span class="o">&gt;</span> <span class="n">VectorPairString</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">MapStringString</span><span class="p">;</span>
+
+<span class="c1">// vectors primitive types</span>
+<span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">VectorDouble</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">VectorInt</span><span class="p">;</span>
+
+<span class="c1">// iterators primitve types</span>
+<span class="k">typedef</span> <span class="n">VectorDouble</span><span class="o">::</span><span class="n">iterator</span> <span class="n">IteratorDouble</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">VectorInt</span><span class="o">::</span><span class="n">iterator</span> <span class="n">IteratorInt</span><span class="p">;</span>
+
+<span class="c1">// if data types are to be modified change this Kernel typedef</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Exact_predicates_inexact_constructions_kernel</span> <span class="n">Kernel</span><span class="p">;</span>
+
+<span class="c1">// Vector kernel data structure</span>
+<span class="k">typedef</span> <span class="n">Kernel</span><span class="o">::</span><span class="n">Vector_3</span> <span class="n">Vector_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">Kernel</span><span class="o">::</span><span class="n">Vector_2</span> <span class="n">Vector_2</span><span class="p">;</span>
+
+<span class="c1">// point definitions</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Point_2</span><span class="o">&lt;</span><span class="n">Kernel</span><span class="o">&gt;</span> <span class="n">Point_2</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Point_3</span><span class="o">&lt;</span><span class="n">Kernel</span><span class="o">&gt;</span> <span class="n">Point_3</span><span class="p">;</span>
+
+<span class="c1">// mesh definitions</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Surface_mesh</span><span class="o">&lt;</span><span class="n">Point_2</span><span class="o">&gt;</span> <span class="n">Mesh_2</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Surface_mesh</span><span class="o">&lt;</span><span class="n">Point_3</span><span class="o">&gt;</span> <span class="n">Mesh_3</span><span class="p">;</span>
+
+<span class="c1">// Mesh properties metadata</span>
+<span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Mesh_2</span><span class="p">,</span> <span class="n">VectorPairString</span><span class="o">&gt;</span> <span class="n">PairMeshVectorPairString_2</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Mesh_3</span><span class="p">,</span> <span class="n">VectorPairString</span><span class="o">&gt;</span> <span class="n">PairMeshVectorPairString_3</span><span class="p">;</span>
+
+<span class="c1">// Mesh datastructures</span>
+<span class="k">typedef</span> <span class="k">typename</span> <span class="n">Mesh_3</span><span class="o">::</span><span class="n">Vertex_index</span> <span class="n">Vertexindex_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="k">typename</span> <span class="n">Mesh_3</span><span class="o">::</span><span class="n">Halfedge_index</span> <span class="n">Halfedgeindex_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="k">typename</span> <span class="n">Mesh_3</span><span class="o">::</span><span class="n">Edge_index</span> <span class="n">Edgeindex_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="k">typename</span> <span class="n">Mesh_3</span><span class="o">::</span><span class="n">Face_index</span> <span class="n">Faceindex_3</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="k">typename</span> <span class="n">Mesh_2</span><span class="o">::</span><span class="n">Vertex_index</span> <span class="n">Vertexindex_2</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="k">typename</span> <span class="n">Mesh_2</span><span class="o">::</span><span class="n">Halfedge_index</span> <span class="n">Haledgeindex_2</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="k">typename</span> <span class="n">Mesh_2</span><span class="o">::</span><span class="n">Edge_index</span> <span class="n">Edgeindex_2</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="k">typename</span> <span class="n">Mesh_2</span><span class="o">::</span><span class="n">Face_index</span> <span class="n">Faceindex_2</span><span class="p">;</span>
+
+<span class="c1">// Pair of mesh datastructures</span>
+<span class="k">typedef</span> <span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Vertexindex_3</span><span class="p">,</span> <span class="n">Vertexindex_3</span><span class="o">&gt;</span>
+      <span class="n">PairVertexindex_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Vertexindex_3</span><span class="p">,</span> <span class="n">Vertexindex_3</span><span class="o">&gt;</span>
+      <span class="n">PairVertexindex_2</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Vertexindex_3</span><span class="p">,</span> <span class="n">Vertexindex_3</span><span class="o">&gt;</span>
+      <span class="n">PairVertexindex_2</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Point_3</span><span class="p">,</span><span class="n">Vector_3</span><span class="o">&gt;</span> <span class="n">PairPointVector</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Halfedgeindex_3</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">PairHalfedgeindexInt_3</span><span class="p">;</span>
+
+<span class="c1">// boost mesh structures</span>
+<span class="k">typedef</span> <span class="k">typename</span> <span class="n">boost</span><span class="o">::</span><span class="n">vertex_index_t</span> <span class="n">TypeVertexindex</span><span class="p">;</span>
+
+<span class="c1">// unordered propety maps</span>
+<span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">Vertexindex_3</span><span class="p">,</span> <span class="kt">double</span><span class="o">&gt;</span>
+      <span class="n">UmapVertexindexDouble_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">Vertexindex_3</span><span class="p">,</span> <span class="n">Vertexindex_3</span><span class="o">&gt;</span>
+      <span class="n">UmapVertexindex_3</span><span class="p">;</span>
+
+<span class="c1">// vectors of mesh datastructures</span>
+<span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vertexindex_3</span><span class="o">&gt;</span> <span class="n">VectorVertexindex_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Halfedgeindex_3</span><span class="o">&gt;</span> <span class="n">VectorHalfedgeindex_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Point_3</span><span class="o">&gt;</span> <span class="n">VectorPoint_3</span><span class="p">;</span>
+
+<span class="c1">// iterators of mesh datastructures</span>
+<span class="k">typedef</span> <span class="n">VectorVertexindex_3</span><span class="o">::</span><span class="n">iterator</span> <span class="n">IteratorVectorVertexindex_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">VectorDouble</span><span class="o">::</span><span class="n">iterator</span> <span class="n">IteratorVectorDouble_3</span><span class="p">;</span>
+
+<span class="c1">// boost property maps</span>
+<span class="k">typedef</span> <span class="k">typename</span> <span class="n">boost</span><span class="o">::</span><span class="n">property_map</span><span class="o">&lt;</span><span class="n">Mesh_3</span><span class="p">,</span> <span class="n">TypeVertexindex</span><span class="o">&gt;::</span><span class="n">type</span> <span class="n">VertexIdPropertyMap_3</span><span class="p">;</span>
+
+<span class="c1">// boost iterator maps</span>
+<span class="k">typedef</span> <span class="k">typename</span> <span class="n">boost</span><span class="o">::</span><span class="n">iterator_property_map</span>
+      <span class="o">&lt;</span><span class="n">IteratorVectorVertexindex_3</span><span class="p">,</span> <span class="n">VertexIdPropertyMap_3</span><span class="o">&gt;</span> <span class="n">IteratorPmapVertexindex_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="k">typename</span> <span class="n">boost</span><span class="o">::</span><span class="n">iterator_property_map</span>
+      <span class="o">&lt;</span><span class="n">IteratorVectorDouble_3</span><span class="p">,</span> <span class="n">VertexIdPropertyMap_3</span><span class="o">&gt;</span> <span class="n">IteratorPmapdouble_3</span><span class="p">;</span>
+
+<span class="c1">// boost unordered maps</span>
+<span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">Vertexindex_3</span><span class="p">,</span> <span class="kt">double</span><span class="o">&gt;</span> <span class="n">UmapVertexindexDouble_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">Vertexindex_3</span><span class="p">,</span> <span class="n">Vertexindex_3</span><span class="o">&gt;</span> <span class="n">UmapVertexindex_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">Halfedgeindex_3</span><span class="p">,</span> <span class="kt">bool</span><span class="o">&gt;</span> <span class="n">UmapHalfedgeindexBool_3</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">Halfedgeindex_3</span><span class="p">,</span> <span class="n">Vertexindex_3</span><span class="o">&gt;</span> <span class="n">UmapHalfedgeindexVertexindex_3</span><span class="p">;</span>
+<span class="c1">// pair umaps</span>
+<span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">UmapVertexindexDouble_3</span><span class="p">,</span> <span class="n">UmapVertexindex_3</span><span class="o">&gt;</span> <span class="n">PairUmapdoubleVertexindex_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">UmapVertexindexDouble_3</span><span class="p">,</span> <span class="n">UmapVertexindex_3</span><span class="o">&gt;</span>
+      <span class="n">PairUmapDoubleUmapVertexindex_3</span><span class="p">;</span>
+
+<span class="c1">// mesh property_maps</span>
+<span class="k">typedef</span> <span class="k">typename</span> <span class="n">Mesh_3</span><span class="o">::</span><span class="n">Property_map</span><span class="o">&lt;</span><span class="n">Vertexindex_3</span><span class="p">,</span> <span class="kt">double</span><span class="o">&gt;</span>
+      <span class="n">MapVertexindexDouble_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="k">typename</span> <span class="n">Mesh_3</span><span class="o">::</span><span class="n">Property_map</span><span class="o">&lt;</span><span class="n">Vertexindex_3</span><span class="p">,</span> <span class="n">Vertexindex_3</span><span class="o">&gt;</span>
+      <span class="n">MapVertexindex_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="k">typename</span> <span class="n">Mesh_3</span><span class="o">::</span><span class="n">Property_map</span><span class="o">&lt;</span><span class="n">Vertexindex_3</span><span class="p">,</span> <span class="n">Vector_3</span><span class="o">&gt;</span>
+      <span class="n">MapVertexindexVector_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">Mesh_3</span><span class="o">::</span><span class="n">Property_map</span><span class="o">&lt;</span><span class="n">Vertexindex_3</span><span class="p">,</span> <span class="n">Point_2</span><span class="o">&gt;</span>
+      <span class="n">MapVertexindex_3_to_Point2</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">Mesh_3</span><span class="o">::</span><span class="n">Property_map</span><span class="o">&lt;</span><span class="n">Vertexindex_3</span><span class="p">,</span> <span class="n">Point_3</span><span class="o">&gt;</span>
+      <span class="n">MapVertexindex_3_to_Point3</span><span class="p">;</span>
+
+<span class="c1">// output tuples</span>
+<span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">Vertexindex_3</span><span class="p">,</span> <span class="n">Vertexindex_3</span><span class="p">,</span> <span class="n">UmapVertexindex_3</span><span class="o">&gt;</span>
+      <span class="n">TupleVertexVertexUmapvertex_3</span><span class="p">;</span>
+
+<span class="c1">// Unique hash maps</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Unique_hash_map</span><span class="o">&lt;</span><span class="n">Halfedgeindex_3</span><span class="p">,</span> <span class="n">Point_2</span><span class="o">&gt;</span> <span class="n">UHMHalfedgeindexPoint_32</span><span class="p">;</span> <span class="c1">//32 means map from Mesh_3 to Mesh_2</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Unique_hash_map</span><span class="o">&lt;</span><span class="n">Halfedgeindex_3</span><span class="p">,</span> <span class="n">Point_3</span><span class="o">&gt;</span> <span class="n">UHMHalfedgeindexPoint_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Unique_hash_map</span><span class="o">&lt;</span><span class="n">Vertexindex_3</span><span class="p">,</span> <span class="n">Point_3</span><span class="o">&gt;</span> <span class="n">UHMVertexindexPoint_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Unique_hash_map</span><span class="o">&lt;</span><span class="n">Edgeindex_3</span><span class="p">,</span> <span class="kt">bool</span><span class="o">&gt;</span> <span class="n">UHMEdgeindexBool_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Unique_hash_map</span><span class="o">&lt;</span><span class="n">Vertexindex_3</span><span class="p">,</span> <span class="kt">bool</span><span class="o">&gt;</span> <span class="n">UHMVertexindexBool_3</span><span class="p">;</span>
+
+<span class="c1">// nested vectors</span>
+<span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Halfedgeindex_3</span><span class="o">&gt;&gt;</span> <span class="n">NestedVectorHalfedgeindex_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vertexindex_3</span><span class="o">&gt;&gt;</span> <span class="n">NestedVectorVertexindex_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Edgeindex_3</span><span class="o">&gt;&gt;</span> <span class="n">NestedVectorEdgeindex_3</span><span class="p">;</span>
+
+<span class="c1">// bellow shows the necessities for a seam mesh----------------------------------</span>
+
+<span class="c1">// associative propeerty maps</span>
+<span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">associative_property_map</span><span class="o">&lt;</span><span class="n">UHMHalfedgeindexPoint_32</span><span class="o">&gt;</span> <span class="n">APMHalfedgeindexPoint_32</span><span class="p">;</span> <span class="c1">// &lt;--- required for the seam mesh</span>
+<span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">associative_property_map</span><span class="o">&lt;</span><span class="n">UHMEdgeindexBool_3</span><span class="o">&gt;</span> <span class="n">APMEdgeindexBool_3</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">associative_property_map</span><span class="o">&lt;</span><span class="n">UHMVertexindexBool_3</span><span class="o">&gt;</span> <span class="n">APMVertexindexBool_3</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Seam_mesh</span><span class="o">&lt;</span><span class="n">Mesh_3</span><span class="p">,</span> <span class="n">APMEdgeindexBool_3</span><span class="p">,</span> <span class="n">APMVertexindexBool_3</span><span class="o">&gt;</span> <span class="n">SeamMesh</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>To change the kernel we can modify the line,</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">CGAL</span><span class="o">::</span><span class="n">Exact_predicates_inexact_constructions_kernel</span> <span class="n">Kernel</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="3_cmake.html"
+                        title="previous chapter">Example CMakeLists.txt</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/typedefs.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="3_cmake.html" title="Example CMakeLists.txt"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Chris Mamon 1.0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, CGALUnwrapper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0.
+    </div>
+  </body>
+</html>
