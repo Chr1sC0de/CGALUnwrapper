@@ -322,27 +322,6 @@ PYBIND11_TEST:BOOL=OFF
 //Path to a program.
 PYTHON_EXECUTABLE:FILEPATH=C:/Users/chris/AppData/Local/Programs/Python/Python37/python.exe
 
-//The directory containing a CMake configuration file for Qt5Core.
-Qt5Core_DIR:PATH=D:/Qt/5.14.1/msvc2017_64/lib/cmake/Qt5Core
-
-//The directory containing a CMake configuration file for Qt5Gui.
-Qt5Gui_DIR:PATH=D:/Qt/5.14.1/msvc2017_64/lib/cmake/Qt5Gui
-
-//The directory containing a CMake configuration file for Qt5OpenGL.
-Qt5OpenGL_DIR:PATH=D:/Qt/5.14.1/msvc2017_64/lib/cmake/Qt5OpenGL
-
-//The directory containing a CMake configuration file for Qt5Svg.
-Qt5Svg_DIR:PATH=D:/Qt/5.14.1/msvc2017_64/lib/cmake/Qt5Svg
-
-//The directory containing a CMake configuration file for Qt5Widgets.
-Qt5Widgets_DIR:PATH=D:/Qt/5.14.1/msvc2017_64/lib/cmake/Qt5Widgets
-
-//The directory containing a CMake configuration file for Qt5Xml.
-Qt5Xml_DIR:PATH=D:/Qt/5.14.1/msvc2017_64/lib/cmake/Qt5Xml
-
-//The directory containing a CMake configuration file for Qt5.
-Qt5_DIR:PATH=D:/Qt/5.14.1/msvc2017_64/lib/cmake/Qt5
-
 //Install pybind11 headers in Python include directory instead
 // of default installation prefix
 USE_PYTHON_INCLUDE_DIR:BOOL=OFF

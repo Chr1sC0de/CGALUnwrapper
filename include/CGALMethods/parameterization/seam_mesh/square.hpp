@@ -27,23 +27,59 @@ namespace square{
 
     }
 
-    // namespace conformal{
+    namespace conformal{
 
-    //     PairString parameterize(SeamMesh & mesh){
-    //         return parameterize_t<SquareConformalParameterizer>(mesh);
-    //     }
+        void parameterize(SeamMesh & mesh, APMHalfedgeindexPoint_32 & uv_pmap){
+            parameterize_t<SquareConformalParameterizer>(mesh, uv_pmap);
+        }
 
-    //     PairString parameterize(
-    //             SeamMesh & mesh,
-    //             VectorVertexindex_3 corner_vertices,
-    //             string name="v:parameterized_points"
-    //     ){
-    //         return parameterize_t<SquareParameterizer, SquareConformalParameterizer>(
-    //             mesh, corner_vertices
-    //         );
-    //     }
+        void parameterize(
+                SeamMesh & mesh,
+                const VectorPoint_3 corner_points,
+                APMHalfedgeindexPoint_32 & uv_pmap
+        ){
+            parameterize_t<SquareParameterizer, SquareConformalParameterizer>(
+                mesh, corner_points, uv_pmap
+            );
+        }
 
-    // }
+    }
+
+    namespace barycentric{
+
+        void parameterize(SeamMesh & mesh, APMHalfedgeindexPoint_32 & uv_pmap){
+            parameterize_t<SquareBarycentricParameterizer>(mesh, uv_pmap);
+        }
+
+        void parameterize(
+                SeamMesh & mesh,
+                const VectorPoint_3 corner_points,
+                APMHalfedgeindexPoint_32 & uv_pmap
+        ){
+            parameterize_t<SquareParameterizer, SquareBarycentricParameterizer>(
+                mesh, corner_points, uv_pmap
+            );
+        }
+
+    }
+
+    namespace floatermean{
+
+        void parameterize(SeamMesh & mesh, APMHalfedgeindexPoint_32 & uv_pmap){
+            parameterize_t<SquareFloaterMeanParameterizer>(mesh, uv_pmap);
+        }
+
+        void parameterize(
+                SeamMesh & mesh,
+                const VectorPoint_3 corner_points,
+                APMHalfedgeindexPoint_32 & uv_pmap
+        ){
+            parameterize_t<SquareParameterizer, SquareFloaterMeanParameterizer>(
+                mesh, corner_points, uv_pmap
+            );
+        }
+
+    }
 
 }
 

@@ -48,6 +48,7 @@ auto get_property_as_numpy(
     return convert_buffer_to_numpy(mesh, buffer);
 }
 
+
 // tps::VectorDouble default_vector({std::numeric_limits<double>::max(), 0.0, 0.0});
 
 PYBIND11_MODULE(CGALMethods, m){
@@ -59,6 +60,7 @@ PYBIND11_MODULE(CGALMethods, m){
             self.write_vtk(path);
         })
         .def("calculate_curvature", [](CM::bound::SurfaceMesh & self, int d_fitting, int d_monge, int knn, bool internal){
+            py::gil_scoped_release release;
             self.calculate_curvature(d_fitting, d_monge, knn, internal);
         },
         py::arg("d_fitting") = 4, py::arg("d_monge") = 4, py::arg("knn") = 300, py::arg("internal") = true
@@ -90,21 +92,24 @@ PYBIND11_MODULE(CGALMethods, m){
 
     m.def("unwrap_cylindrical_surface_mesh", [](
                 CM::bound::SurfaceMesh & wrapped_mesh,
-                py::array_t<double> inlet_origin
+                double x,
+                double y,
+                double z
             ){
-                py::buffer_info buff = inlet_origin.request();
-                double * ptr = (double *) buff.ptr;
-                tps::Point_3 point_origin(ptr[0], ptr[1], ptr[2]);
+                tps::Point_3 point_origin(x, y, z);
 
                 tps::VectorPairString property_name_types = wrapped_mesh.get_vector_property_name_type();
+
                 tps::PairMeshVectorPairString_3 cylinder_mesh_flat_data
                     = CM::parameterization::cylindrical_mesh_parameteriztion_square_authalic(
                     wrapped_mesh.data, property_name_types, point_origin);
+
                 CM::bound::SurfaceMesh surface_mesh(
                     cylinder_mesh_flat_data.first,
                     cylinder_mesh_flat_data.second
                 );
                 return surface_mesh;
+
             }
         )
     ;

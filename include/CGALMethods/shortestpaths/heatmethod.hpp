@@ -7,6 +7,12 @@
 #include <limits>
 
 
+#include <CGAL/Eigen_solver_traits.h>
+#include <CGAL/Eigen_matrix.h>
+#include <CGAL/Eigen_diagonalize_traits.h>
+#include <Eigen/IterativeLinearSolvers>
+
+
 namespace CGALMethods {
 namespace shortestpaths{
 namespace heatmethod {
@@ -16,7 +22,47 @@ namespace heatmethod {
         using namespace std;
     }
     //-----------------------------------------------------------------------------------
-    typedef CGAL::Heat_method_3::Surface_mesh_geodesic_distances_3<Mesh_3> HeatMethod;
+
+    // typedef CGAL::Eigen_sparse_matrix<double>::EigenType EigenMatrix;
+
+    // typedef CGAL::Eigen_solver_traits<
+    //     Eigen::BiCGSTAB
+    //         <
+    //             CGAL::Eigen_sparse_matrix<double>::EigenType,
+    //             Eigen::DiagonalPreconditioner<double>
+    //         >
+    // > Iterative_symmetric_solver;
+
+    // typedef CGAL::Eigen_solver_traits<
+    //     Eigen::ConjugateGradient
+    //         <
+    //             CGAL::Eigen_sparse_matrix<double>::EigenType,
+    //             Eigen::Upper|Eigen::Lower,
+    //             Eigen::IncompleteLUT<double>
+    //         >
+    // > Iterative_symmetric_solver;
+
+    // typedef CGAL::Eigen_solver_traits<
+    //     Eigen::SimplicialLDLT
+    //         <
+    //             CGAL::Eigen_sparse_matrix<double>::EigenType
+    //             // Eigen::Upper|Eigen::Lower,
+    //             // Eigen::IncompleteLUT<double>
+    //         >
+    // > Iterative_symmetric_solver;
+
+    typedef CGAL::Eigen_solver_traits<
+        Eigen::SimplicialLDLT<
+            CGAL::Eigen_sparse_matrix<double>::EigenType
+        >
+    > Iterative_symmetric_solver;
+
+    typedef CGAL::Heat_method_3::Surface_mesh_geodesic_distances_3
+        <
+        Mesh_3,
+        CGAL::Heat_method_3::Direct,
+        Mesh_3::Property_map<Vertexindex_3, Point_3>,
+        Iterative_symmetric_solver> HeatMethod;
 
     //-----------------------------------------------------------------------------------
     PairString map_vertex_distances_to_sources(
@@ -69,15 +115,15 @@ namespace heatmethod {
     //-----------------------------------------------------------------------------------
     TupleVertexVertexUmapvertex_3 closest_vertex_pair_between_sources(
         Mesh_3 & mesh,
-        const VectorVertexindex_3 sources_1,
-        const VectorVertexindex_3 sources_2,
-        const string sources_name="v:heat_method"
+        VectorVertexindex_3 sources_1,
+        VectorVertexindex_3 sources_2,
+        string sources_name="v:heat_method"
     ){
 
         double shortest_distance = numeric_limits<double>::max();
 
-        Vertexindex_3 closest_vertex_from_source_1_to_source_2;
-        Vertexindex_3 closest_vertex_from_source_2_to_source_1;
+        Vertexindex_3 closest_vertex_from_source_1_to_source_2(sources_1[(int)sources_1.size()/2]);
+        Vertexindex_3 closest_vertex_from_source_2_to_source_1(sources_2[(int)sources_2.size()/2]);
 
         VectorVertexindex_3 shortest_path_source_1_to_source_2;
 
@@ -86,6 +132,11 @@ namespace heatmethod {
         // get the vertex from source_1 closest to source_2
         map_vertex_distances_to_sources(mesh, sources_2, sources_name);
         MapVertexindexDouble_3 all_distances_to_sources_2 = mesh.property_map<Vertexindex_3, double>(sources_name).first;
+
+        // MapVertexindexDouble_3 all_distances_to_sources_2 =
+        //     mesh.add_property_map<Vertexindex_3, double>("v:heat_method", 0).first;
+
+        // CGAL::Heat_method_3::estimate_geodesic_distances(mesh, all_distances_to_sources_2, sources_2);
 
         for (Vertexindex_3 vi: sources_1){
 
@@ -213,6 +264,7 @@ namespace heatmethod {
         );
 
     }
+    //-----------------------------------------------------------------------------------
 
 
 }

@@ -55,7 +55,7 @@ int main () {
     }
 
     types::PairMeshVectorPairString_3 cylinder_mesh_flat_test =
-        parameterization::cylindrical_mesh_parameteriztion_square_authalic(mesh, property_meta_data);
+        parameterization::cylindrical_mesh_parameteriztion_square_authalic(mesh, property_meta_data, {-15.5092535, -10.966625 , -21.51544});
 
     types::Mesh_3 flat_w_curve = cylinder_mesh_flat_test.first;
     types::VectorPairString meta_flat_w_curve = cylinder_mesh_flat_test.second;

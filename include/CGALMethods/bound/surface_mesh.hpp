@@ -74,7 +74,9 @@ namespace bound{
             }
 
             void calculate_curvature(int d_fitting=4, int d_monge=4, int knn=300, bool internal=true){
-                VectorPairString curvature_props = localDifferentiableProperties::curvature::monge::surface_mesh(data, d_fitting, d_monge, knn, internal);
+                VectorPairString curvature_props =
+                    localDifferentiableProperties::curvature::monge::surface_mesh(
+                        data, d_fitting, d_monge, knn, internal);
                 parse_vector_property_type(curvature_props);
             }
 

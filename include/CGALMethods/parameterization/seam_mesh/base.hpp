@@ -2,6 +2,11 @@
 #include <CGALMethods/property_buffer_vertices.hpp>
 #include <CGALMethods/parameterization/parameterization.hpp>
 
+#include <CGAL/Eigen_solver_traits.h>
+#include <CGAL/Eigen_matrix.h>
+#include <CGAL/Eigen_diagonalize_traits.h>
+#include <Eigen/IterativeLinearSolvers>
+
 namespace CGALMethods{
 namespace parameterization{
 namespace seam_mesh{
@@ -21,10 +26,46 @@ namespace seam_mesh{
     // square parameterizers templated for the seam mesh
     typedef typename SMP::Square_border_uniform_parameterizer_3
         <SeamMesh> SquareParameterizer;
+
+    // typedef CGAL::Eigen_sparse_matrix<double>::EigenType EigenMatrix;
+
+    // typedef CGAL::Eigen_solver_traits<
+    //     Eigen::BiCGSTAB<
+    //         CGAL::Eigen_sparse_matrix<double>::EigenType,
+    //         Eigen::IncompleteLUT< double >
+    //     >
+    // > Iterative_symmetric_solver;
+
+    // typedef CGAL::Eigen_solver_traits<
+    //     Eigen::ConjugateGradient
+    //         <
+    //             CGAL::Eigen_sparse_matrix<double>::EigenType,
+    //             Eigen::Upper|Eigen::Lower
+    //             // Eigen::IncompleteLUT<double>
+    //         >
+    // > Iterative_symmetric_solver;
+
+
+    typedef CGAL::Eigen_solver_traits<
+        Eigen::BiCGSTAB<
+            CGAL::Eigen_sparse_matrix<double>::EigenType,
+            Eigen::DiagonalPreconditioner<double>
+        >
+    > Iterative_symmetric_solver;
+
+    // set the solver
+
     typedef typename SMP::Discrete_conformal_map_parameterizer_3
-        <SeamMesh, SquareParameterizer> SquareConformalParameterizer;
+        <SeamMesh, SquareParameterizer, Iterative_symmetric_solver> SquareConformalParameterizer;
+
     typedef typename SMP::Discrete_authalic_parameterizer_3
-        <SeamMesh, SquareParameterizer> SquareAuthalicParameterizer;
+        <SeamMesh, SquareParameterizer, Iterative_symmetric_solver> SquareAuthalicParameterizer;
+
+    typedef typename SMP::Barycentric_mapping_parameterizer_3
+        <SeamMesh, SquareParameterizer, Iterative_symmetric_solver> SquareBarycentricParameterizer;
+
+    typedef typename SMP::Mean_value_coordinates_parameterizer_3
+        <SeamMesh, SquareParameterizer, Iterative_symmetric_solver> SquareFloaterMeanParameterizer;
 
     typedef typename std::vector<SeamVertexDescriptor> SeamVectorVertexdescriptor;
     typedef typename boost::unordered_map<Halfedgeindex_3, Vertexindex_3> UmapHalfedgeindexVertexindex_3;
@@ -153,9 +194,6 @@ namespace seam_mesh{
             const VectorPoint_3 corner_points,
             APMHalfedgeindexPoint_32 & uv_pmap
     ){
-        // if (corner_points.size() != 4){
-        //     throw "the size of the input vector must be 4";
-        // }
 
         SeamHalfedgeDescriptor longest_halfedge_index =
             CGAL::Polygon_mesh_processing::longest_border(sm_mesh).first;
@@ -167,9 +205,10 @@ namespace seam_mesh{
         }
 
     //    vector<SeamVertexDescriptor> corner_indices(4);
-        vector<SeamHalfedgeDescriptor> corner_indices(4);
+        vector<SeamVertexDescriptor> corner_indices(4);
         Mesh_3 tm_mesh = sm_mesh.mesh();
         for (SeamHalfedgeDescriptor hd: CGAL::halfedges_around_face(longest_halfedge_index, sm_mesh)){
+
             Point_3 temp_point = tm_mesh.point(
                 source(Halfedgeindex_3(hd), tm_mesh)
             );
@@ -178,7 +217,7 @@ namespace seam_mesh{
                 double distance = CGAL::sqrt(CGAL::squared_distance(corner_points[i], temp_point));
                 if (distance < min_distances[i]){
                     min_distances[i] = distance;
-                    corner_indices[i] = hd;
+                    corner_indices[i] = sm_mesh.source(hd);
                 }
             }
 

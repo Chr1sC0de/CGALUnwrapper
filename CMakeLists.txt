@@ -110,5 +110,5 @@ set(CGALBindings_destination_tests "${PROJECT_SOURCE_DIR}/tests_python/CGALMetho
 
 add_custom_command(
   TARGET CGALMethods POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy ${CGALBindings_pyd} ${CGALBindings_pdb} ${CGALBindings_destination}
+  COMMAND ${CMAKE_COMMAND} -E copy ${CGALBindings_pyd} ${CGALBindings_pdb} ${CGALBindings_destination_tests}
 )

@@ -18,6 +18,7 @@
 
 #include <CGAL/boost/graph/Seam_mesh.h>
 
+
 namespace CGALMethods{
 namespace types{
 
@@ -37,7 +38,7 @@ namespace types{
     typedef VectorInt::iterator IteratorInt;
 
     // if data types are to be modified change this Kernel typedef
-    typedef CGAL::Exact_predicates_inexact_constructions_kernel Kernel;
+    typedef CGAL::Simple_cartesian<double> Kernel;
 
     // Vector kernel data structure
     typedef Kernel::Vector_3 Vector_3;

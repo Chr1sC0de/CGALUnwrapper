@@ -1,0 +1,5 @@
+.vscode/
+CGALMethods.egg-info/
+unwrapperEnv/
+**__pycache__/
+tests_python\config.py
