@@ -7,7 +7,6 @@ import time
 import multiprocessing as mp
 from tqdm import tqdm
 
-
 def chunkIt(seq, num):
         avg = len(seq) // num
         out = []
@@ -37,7 +36,7 @@ def unwrap_foam_vtk(foam_path, savefolder):
         gridded = CM.map_parameterized_mesh_to_grid(unwrapped)
 
         output = {}
-        # now scale the data
+        # now scale the data such theat the neural network can obtain the data in the correct size
         max_k = gridded['maximum_curvature'] / 1000
         min_k = gridded['minimum_curvature'] / 1000
 
@@ -50,22 +49,13 @@ def unwrap_foam_vtk(foam_path, savefolder):
             axis=0)
         output['points'] = gridded['original_points'] * 1000
 
-        # make sure that the direction is correction
-        wss = output['wss'][0]
-        mean = wss.mean(axis=0).mean()
-        std = wss.mean(axis=0).std()
-        mean_first = wss.mean(axis=0)[0]
-        if mean_first < (mean + 2*std):
-            with open(savefolder/'log.txt', "a") as f:
-                f.write(folder_name+" wrong orientation"+"\n")
-        # finish the check for the orientation of the datasets
-
         np.savez(
             savefolder/folder_name,
             **output
         )
 
         unwrapped.write_vtk((savefolder/(folder_name+".vtk")).as_posix())
+
         del unwrapped
         del wall_mesh
 
@@ -81,23 +71,23 @@ def mp_unwrap(files, savepath):
 
 if __name__ == "__main__":
 
+    n_processors = 8
+
     vtk_folder = config.vtk_folder
     save_folder = config.save_folder
 
     folders = list(vtk_folder.glob('0*'))
 
-    if True:
-        chunks = chunkIt(folders, 7)
+    chunks = chunkIt(folders, n_processors)
 
-        processors = [
-            mp.Process(target=mp_unwrap, args=(files, save_folder))
-            for files in chunks
-        ]
+    processors = [
+        mp.Process(target=mp_unwrap, args=(files, save_folder))
+        for files in chunks
+    ]
 
-        [p.start() for p in processors]
-        [p.join() for p in processors]
-    else:
-        mp_unwrap(folders, save_folder)
+    [p.start() for p in processors]
+    [p.join() for p in processors]
+
 
 
 
