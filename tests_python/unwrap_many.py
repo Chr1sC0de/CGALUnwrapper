@@ -52,7 +52,6 @@ def unwrap_foam_vtk(foam_path, savefolder):
 
         # make sure that the direction is correction
         wss = output['wss'][0]
-        # get the mean of all lines
         mean = wss.mean(axis=0).mean()
         std = wss.mean(axis=0).std()
         mean_first = wss.mean(axis=0)[0]

@@ -227,10 +227,66 @@ namespace seam_mesh{
             longest_halfedge_index = next(longest_halfedge_index, sm_mesh);
         }
 
-        Parameterizer border_param(
-            corner_indices[0], corner_indices[1],
-            corner_indices[2], corner_indices[3]
-        );
+        SeamHalfedgeDescriptor test = longest_halfedge_index;
+
+        VectorInt order;
+
+        do {
+
+            SeamVertexDescriptor test_seam_descriptor = sm_mesh.source(test);
+            if (test_seam_descriptor == corner_indices[0]){
+                order.push_back(0);
+            }
+            if (test_seam_descriptor == corner_indices[1]){
+                order.push_back(1);
+            }
+            if (test_seam_descriptor == corner_indices[2]){
+                order.push_back(2);
+            }
+            if (test_seam_descriptor == corner_indices[3]){
+                order.push_back(3);
+            }
+
+            Vertexindex_3 test_vi = source(Halfedgeindex_3(test), sm_mesh.mesh());
+            test = next(test, sm_mesh);
+        }   while (test!=longest_halfedge_index);
+
+        Parameterizer border_param;
+
+        if (order[0]==0 && order[1]==2 && order[2]==1 && order[3]==3){
+            border_param = Parameterizer(
+                corner_indices[0], corner_indices[1],
+                corner_indices[2], corner_indices[3]
+            );
+        }
+
+        if (order[0]==0 && order[1]==1 && order[2]==2 && order[3]==3){
+            border_param = Parameterizer(
+                corner_indices[3], corner_indices[0],
+                corner_indices[1], corner_indices[2]
+            );
+        }
+
+        if (order[0]==0 && order[1]==3 && order[2]==1 && order[3]==2){
+            border_param = Parameterizer(
+                corner_indices[3], corner_indices[0],
+                corner_indices[1], corner_indices[2]
+            );
+
+            while (sm_mesh.source(longest_halfedge_index) != corner_indices[3]){
+                longest_halfedge_index = next(longest_halfedge_index, sm_mesh);
+            }
+        }
+
+        if (order[0]==0 && order[1]==3 && order[2]==2 && order[3]==1){
+            border_param = Parameterizer(
+                corner_indices[3], corner_indices[0],
+                corner_indices[1], corner_indices[2]
+            );
+            while (sm_mesh.source(longest_halfedge_index) != corner_indices[3]){
+                longest_halfedge_index = next(longest_halfedge_index, sm_mesh);
+            }
+        }
 
         SMP::parameterize(sm_mesh, ParameterizerMapper(border_param), longest_halfedge_index, uv_pmap);
 

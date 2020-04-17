@@ -100,7 +100,8 @@ namespace {
         // if the inlet vector is pointing towards the centroid then reverese the order of the vertices
         if ((centroid_to_inlet_vector * inlet_normal) < (centroid_to_inlet_vector * (-inlet_normal))){
             std::reverse(inlet_vertices.begin()+1, inlet_vertices.end());
-            inlet_normal *= (-1);
+            std::reverse(inlet_points.begin()+1, inlet_points.end());
+            inlet_normal = calculate_normal(inlet_points);
         }
         //check that the inlet and outlet normals point in the same direction
         if ((inlet_normal * outlet_normal) < (inlet_normal * (-outlet_normal))){
@@ -168,13 +169,6 @@ namespace {
             // sort the vertices such that the inlet normal points to the centroid while the  outlet normal
             // points away from the centroid
             sort_inlet_outlet_vertices_correct_direction(mesh.points(), inlet_vertices, outlet_vertices);
-            // now that the inlet and outlet vertices are sorted in the correct directions we can set the corners of the parameterization
-            VectorPoint_3 corner_points = {
-                mesh.point(inlet_vertices[2]),
-                mesh.point(outlet_vertices[2]),
-                mesh.point(outlet_vertices[outlet_vertices.size()-3]),
-                mesh.point(inlet_vertices[inlet_vertices.size()-3])
-            };
             // add the seam to the seam mesh
             for (int i=0; i<(shortest_path_from_inlet_to_outlet.size()-1); i++){
                 sm_mesh.add_seam(
@@ -184,6 +178,13 @@ namespace {
             }
             UHMHalfedgeindexPoint_32 uv_uhm;
             APMHalfedgeindexPoint_32 uv_pmap(uv_uhm);
+            // now that the inlet and outlet vertices are sorted in the correct directions we can set the corners of the parameterization
+            VectorPoint_3 corner_points = {
+                mesh.point(inlet_vertices[3]),
+                mesh.point(outlet_vertices[3]),
+                mesh.point(outlet_vertices[outlet_vertices.size()-4]),
+                mesh.point(inlet_vertices[inlet_vertices.size()-4])
+            };
             // parameterize the seam mesh
             // seam_mesh::square::authalic::parameterize(sm_mesh, corner_points, uv_pmap);
             F(sm_mesh, corner_points, uv_pmap);
