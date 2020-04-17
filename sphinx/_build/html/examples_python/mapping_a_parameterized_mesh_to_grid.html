@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Mapping a Parameterized Mesh to a Grid &#8212; Chris Mamon 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Chris Mamon 1.0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="mapping-a-parameterized-mesh-to-a-grid">
+<h1>Mapping a Parameterized Mesh to a Grid<a class="headerlink" href="#mapping-a-parameterized-mesh-to-a-grid" title="Permalink to this headline">¶</a></h1>
+<p>it might be neccessary to map our parameterized mesh to a grid, to do so we can apply the following method,
+<cite>map_parameterized_mesh_to_grid</cite>,</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">CGALMethods</span> <span class="k">as</span> <span class="nn">CM</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+   <span class="n">surface_mesh</span> <span class="o">=</span> <span class="n">CM</span><span class="o">.</span><span class="n">SurfaceMesh</span><span class="p">(</span><span class="s2">&quot;resources/WALL_400.vtk&quot;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+
+   <span class="n">unwrapped</span> <span class="o">=</span> <span class="n">CM</span><span class="o">.</span><span class="n">unwrap_cylindrical_surface_mesh</span><span class="p">(</span><span class="n">surface_mesh</span><span class="p">)</span>
+   <span class="n">unwrapped</span><span class="o">.</span><span class="n">write_vtk</span><span class="p">(</span><span class="s2">&quot;resources/WALL_400_python_write.vtk&quot;</span><span class="p">)</span>
+
+   <span class="n">mapped_to_grid</span> <span class="o">=</span> <span class="n">CM</span><span class="o">.</span><span class="n">map_parameterized_mesh_to_grid</span><span class="p">(</span><span class="n">unwrapped</span><span class="p">)</span>
+
+   <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">mapped_to_grid</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;property&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="s2">&quot;has shape&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+   <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;resources/structured_grids&#39;</span><span class="p">,</span> <span class="n">mapped_to_grid</span><span class="p">)</span>
+
+   <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">mapped_to_grid</span><span class="p">[</span><span class="s1">&#39;magWallShearStress&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+   <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/examples_python/mapping_a_parameterized_mesh_to_grid.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Chris Mamon 1.0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, CGALUnwrapper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0.
+    </div>
+  </body>
+</html>

@@ -26,3 +26,5 @@ all example C++ code is contained within the folder ./tests_python
    ../examples_python/getting_points_and_properties
    ../examples_python/calculating_surface_curvature
    ../examples_python/unwrapping_a_cylindrical_surface_mesh
+   ../examples_python/mapping_a_parameterized_mesh_to_grid
+   ../examples_python/unwrapping_many_cylindrical_meshes_with_multiprocessing

@@ -54,7 +54,7 @@ auto get_property_as_numpy(
 PYBIND11_MODULE(CGALMethods, m){
 
     py::class_<CM::bound::SurfaceMesh>(m, "SurfaceMesh")
-
+        .def(py::init<>())
         .def(py::init<std::string, double>(), py::arg("path"), py::arg("scale")=1)
         .def("write_vtk", [](CM::bound::SurfaceMesh & self, std::string path){
             self.write_vtk(path);

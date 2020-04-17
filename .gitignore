@@ -2,4 +2,5 @@
 CGALMethods.egg-info/
 unwrapperEnv/
 **__pycache__/
-tests_python\config.py
+tests_python/config.py
+build/

@@ -87,7 +87,3 @@ if __name__ == "__main__":
 
     [p.start() for p in processors]
     [p.join() for p in processors]
-
-
-
-

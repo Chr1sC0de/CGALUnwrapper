@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Unwrapping Many Cylindrical Meshes &#8212; Chris Mamon 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Example CMakeLists.txt" href="../3_cmake.html" />
+    <link rel="prev" title="Mapping a Parameterized Mesh to a Grid" href="mapping_a_parameterized_mesh_to_grid.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../3_cmake.html" title="Example CMakeLists.txt"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mapping_a_parameterized_mesh_to_grid.html" title="Mapping a Parameterized Mesh to a Grid"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Chris Mamon 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../2_examples.html" accesskey="U">Examples</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="unwrapping-many-cylindrical-meshes">
+<h1>Unwrapping Many Cylindrical Meshes<a class="headerlink" href="#unwrapping-many-cylindrical-meshes" title="Permalink to this headline">¶</a></h1>
+<p>It might be necessary to bulk unwrap and map to a structured grid a number of meshes. To do so we can apply
+the python multiprocessing library,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">CGALMethods</span> <span class="k">as</span> <span class="nn">CM</span>
+<span class="kn">import</span> <span class="nn">pathlib</span> <span class="k">as</span> <span class="nn">pt</span>
+<span class="kn">import</span> <span class="nn">config</span> <span class="c1"># this configure file must be supplied by the user</span>
+<span class="kn">import</span> <span class="nn">pyvista</span> <span class="k">as</span> <span class="nn">pv</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+</pre></div>
+</div>
+<p>The general overview of the program will look as follows,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+   <span class="c1"># the total number of processors available on our desktop</span>
+   <span class="n">n_processors</span> <span class="o">=</span> <span class="mi">8</span>
+   <span class="c1"># vtk folder and save folder provided by the user</span>
+   <span class="n">vtk_folder</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">vtk_folder</span>
+   <span class="n">save_folder</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">save_folder</span>
+   <span class="c1"># from our folder of vtk cases grab all the subfolders</span>
+   <span class="n">folders</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">vtk_folder</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">))</span>
+   <span class="c1"># chunk our list of folders into the same number of groups as we have processors</span>
+   <span class="n">chunks</span> <span class="o">=</span> <span class="n">chunkIt</span><span class="p">(</span><span class="n">folders</span><span class="p">,</span> <span class="n">n_processors</span><span class="p">)</span>
+   <span class="c1"># setup the processor</span>
+   <span class="n">processors</span> <span class="o">=</span> <span class="p">[</span>
+      <span class="n">mp</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">mp_unwrap</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">save_folder</span><span class="p">))</span>
+      <span class="k">for</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">chunks</span>
+   <span class="p">]</span>
+   <span class="c1"># start our processors and then rejoin them</span>
+   <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">processors</span><span class="p">]</span>
+   <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">processors</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>To allow for proper multiprocessing within python the <cite>if __name__ == “__main__”</cite> guard is necessary.
+Before implementing our multiprocessing scheme we need to divide our list of cases. Bellow we show an example chunkIt method,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">chunkIt</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
+      <span class="n">avg</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span> <span class="o">//</span> <span class="n">num</span>
+      <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num</span><span class="p">)):</span>
+               <span class="n">k</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">avg</span>
+               <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">num</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                        <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">seq</span><span class="p">[</span><span class="n">k</span><span class="p">:(</span><span class="n">k</span><span class="o">+</span><span class="n">avg</span><span class="p">)])</span>
+               <span class="k">else</span><span class="p">:</span>
+                        <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">seq</span><span class="p">[</span><span class="n">k</span><span class="p">:])</span>
+      <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+<p>The folder of an OpenFoam case after exporting to vtk will look like the following,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">VTK</span>
+<span class="o">|--</span><span class="n">INLET</span>
+   <span class="o">|--</span><span class="n">INLET_</span><span class="p">{</span><span class="n">time</span><span class="p">}</span><span class="o">.</span><span class="n">vtk</span>
+<span class="o">|--</span><span class="n">OUTLET</span>
+   <span class="o">|--</span><span class="n">OUTLET_</span><span class="p">{</span><span class="n">time</span><span class="p">}</span><span class="o">.</span><span class="n">vtk</span>
+<span class="o">|--</span><span class="n">WALL</span>
+   <span class="o">|--</span><span class="n">WALL_</span><span class="p">{</span><span class="n">time</span><span class="p">}</span><span class="o">.</span><span class="n">vtk</span>
+<span class="o">|--</span><span class="n">foam_</span><span class="p">{</span><span class="n">time</span><span class="p">}</span><span class="o">.</span><span class="n">vtk</span>
+</pre></div>
+</div>
+<p>For our case we desire to extract the wss and curvature data and map them to grids. Bellow we provide an
+example code which extracts our artery data, unwraps the artery and maps it to a grid, before saving it as a .npz file</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># a file which take a path to an openfoam vtk directory and a save path</span>
+<span class="k">def</span> <span class="nf">unwrap_foam_vtk</span><span class="p">(</span><span class="n">foam_path</span><span class="p">,</span> <span class="n">savefolder</span><span class="p">):</span>
+
+   <span class="n">folder_name</span> <span class="o">=</span> <span class="n">foam_path</span><span class="o">.</span><span class="n">name</span>
+
+   <span class="n">inlet_mesh</span> <span class="o">=</span> <span class="n">foam_path</span><span class="o">/</span><span class="s2">&quot;INLET/INLET_400.vtk&quot;</span>
+   <span class="n">wall_mesh</span> <span class="o">=</span> <span class="n">foam_path</span><span class="o">/</span><span class="s2">&quot;WALL/WALL_400.vtk&quot;</span>
+   <span class="n">inlet_mesh</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">inlet_mesh</span><span class="p">)</span>
+
+   <span class="n">wall_mesh</span> <span class="o">=</span> <span class="n">CM</span><span class="o">.</span><span class="n">SurfaceMesh</span><span class="p">(</span><span class="n">wall_mesh</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span>
+   <span class="n">wall_mesh</span><span class="o">.</span><span class="n">calculate_curvature</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+   <span class="n">inlet_origin</span> <span class="o">=</span> <span class="n">inlet_mesh</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+   <span class="n">unwrapped</span> <span class="o">=</span> <span class="n">CM</span><span class="o">.</span><span class="n">unwrap_cylindrical_surface_mesh</span><span class="p">(</span><span class="n">wall_mesh</span><span class="p">,</span> <span class="o">*</span><span class="n">inlet_origin</span><span class="p">)</span>
+   <span class="n">gridded</span> <span class="o">=</span> <span class="n">CM</span><span class="o">.</span><span class="n">map_parameterized_mesh_to_grid</span><span class="p">(</span><span class="n">unwrapped</span><span class="p">)</span>
+
+   <span class="n">output</span> <span class="o">=</span> <span class="p">{}</span>
+   <span class="c1"># now scale the data such theat the neural network can obtain the data in the correct size</span>
+   <span class="n">max_k</span> <span class="o">=</span> <span class="n">gridded</span><span class="p">[</span><span class="s1">&#39;maximum_curvature&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1000</span>
+   <span class="n">min_k</span> <span class="o">=</span> <span class="n">gridded</span><span class="p">[</span><span class="s1">&#39;minimum_curvature&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1000</span>
+
+   <span class="n">mean_k</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_k</span><span class="o">+</span><span class="n">min_k</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+   <span class="n">gaussian_k</span> <span class="o">=</span> <span class="n">max_k</span> <span class="o">*</span> <span class="n">min_k</span>
+
+   <span class="n">output</span><span class="p">[</span><span class="s1">&#39;wss&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gridded</span><span class="p">[</span><span class="s1">&#39;magWallShearStress&#39;</span><span class="p">]</span>
+   <span class="n">output</span><span class="p">[</span><span class="s1">&#39;curvature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+         <span class="p">[</span><span class="n">min_k</span><span class="p">,</span> <span class="n">max_k</span><span class="p">,</span> <span class="n">mean_k</span><span class="p">,</span><span class="n">gaussian_k</span><span class="p">],</span>
+         <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+   <span class="n">output</span><span class="p">[</span><span class="s1">&#39;points&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gridded</span><span class="p">[</span><span class="s1">&#39;original_points&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span>
+
+   <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span>
+         <span class="n">savefolder</span><span class="o">/</span><span class="n">folder_name</span><span class="p">,</span>
+         <span class="o">**</span><span class="n">output</span>
+   <span class="p">)</span>
+
+   <span class="n">unwrapped</span><span class="o">.</span><span class="n">write_vtk</span><span class="p">((</span><span class="n">savefolder</span><span class="o">/</span><span class="p">(</span><span class="n">folder_name</span><span class="o">+</span><span class="s2">&quot;.vtk&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Once we have generate the main method we need a function which acts as the target to our multiprocessing method</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mp_unwrap</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">savepath</span><span class="p">):</span>
+   <span class="k">for</span> <span class="n">folder</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
+      <span class="k">try</span><span class="p">:</span>
+            <span class="n">unwrap_foam_vtk</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">savepath</span><span class="p">)</span>
+      <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="s2">&quot;failed&quot;</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">savepath</span><span class="o">/</span><span class="s1">&#39;log.txt&#39;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+               <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">folder</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>we provide a logging method for any cases which fail to unwrap properly</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mapping_a_parameterized_mesh_to_grid.html"
+                        title="previous chapter">Mapping a Parameterized Mesh to a Grid</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../3_cmake.html"
+                        title="next chapter">Example CMakeLists.txt</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/examples_python/unwrapping_many_cylindrical_meshes_with_multiprocessing.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../3_cmake.html" title="Example CMakeLists.txt"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="mapping_a_parameterized_mesh_to_grid.html" title="Mapping a Parameterized Mesh to a Grid"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Chris Mamon 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../2_examples.html" >Examples</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, CGALUnwrapper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0.
+    </div>
+  </body>
+</html>

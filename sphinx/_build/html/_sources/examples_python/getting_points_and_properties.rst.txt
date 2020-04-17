@@ -1,4 +1,4 @@
-Accessing Points and Properties as Aumpy Arrays
+Accessing Points and Properties as Numpy Arrays
 -----------------------------------------------
 
 Points and properties can be accessed directly from the CGALMesh as numpy arrays
