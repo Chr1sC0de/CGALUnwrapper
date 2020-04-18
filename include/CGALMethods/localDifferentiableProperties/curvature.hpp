@@ -4,7 +4,8 @@
 
 #include <CGAL/Search_traits_3.h>
 #include <CGAL/Search_traits_adapter.h>
-#include <CGAL/Orthogonal_k_neighbor_search.h>
+// #include <CGAL/Orthogonal_k_neighbor_search.h>
+#include <CGAL/K_neighbor_search.h>
 #include <CGAL/Polygon_mesh_processing/compute_normal.h>
 #include <CGAL/Monge_via_jet_fitting.h>
 #include <CGAL/mst_orient_normals.h>
@@ -24,7 +25,8 @@ namespace curvature{
     typedef CGAL::Search_traits_3<Kernel> Traitsbase;
     typedef CGAL::Search_traits_adapter<Vertexdescriptor, Vertex_point_pmap, Traitsbase> Traits;
 
-    typedef CGAL::Orthogonal_k_neighbor_search<Traits> K_neighbor_search;
+    // typedef CGAL::Orthogonal_k_neighbor_search<Traits> K_neighbor_search;
+    typedef CGAL::K_neighbor_search<Traits> K_neighbor_search;
     typedef K_neighbor_search::Tree Tree;
     typedef Tree::Splitter Splitter;
     typedef K_neighbor_search::Distance Distance;

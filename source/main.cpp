@@ -80,7 +80,8 @@ PYBIND11_MODULE(CGALMethods, m){
             ){
                 tps::VectorPairString property_name_types = wrapped_mesh.get_vector_property_name_type();
                 tps::PairMeshVectorPairString_3 cylinder_mesh_flat_data
-                    = CM::parameterization::cylindrical_mesh_parameteriztion_square_authalic(wrapped_mesh.data, property_name_types);
+                    = CM::parameterization::cylindrical_mesh_parameteriztion_square_authalic(
+                        wrapped_mesh.data, property_name_types);
                 CM::bound::SurfaceMesh surface_mesh(
                     cylinder_mesh_flat_data.first,
                     cylinder_mesh_flat_data.second

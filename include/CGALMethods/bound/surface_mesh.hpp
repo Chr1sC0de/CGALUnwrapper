@@ -47,8 +47,8 @@ namespace bound{
             // ---------------------------------------------------------------------------------------------------------------------------
             void add_face_list(const list<VectorInt> & face_list){
                 for (VectorInt face_indexes: face_list){
-                    VectorVertex_3 temp_vertices(face_indexes.size());
-                    for (int i=0; i<faces.size())
+                    VectorVertexindex_3 temp_vertices(face_indexes.size());
+                    for (int i=0; i<face_list.size(); i++)
                         temp_vertices[i] = Vertexindex_3(face_indexes[i]);
                     data.add_face(temp_vertices);
                 }
