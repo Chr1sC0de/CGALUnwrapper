@@ -26,6 +26,8 @@ namespace seam_mesh{
     // square parameterizers templated for the seam mesh
     typedef typename SMP::Square_border_uniform_parameterizer_3
         <SeamMesh> SquareParameterizer;
+    // typedef typename SMP::Square_border_arc_length_parameterizer_3
+    //     <SeamMesh> SquareParameterizer;
 
     // typedef CGAL::Eigen_sparse_matrix<double>::EigenType EigenMatrix;
 
