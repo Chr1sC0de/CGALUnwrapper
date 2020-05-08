@@ -23,7 +23,7 @@ def unwrap_foam_vtk(foam_path, savefolder):
     folder_name = foam_path.name
 
     if not (savefolder/(folder_name+".vtk")).exists():
-
+        foam_path = foam_path/"foam/VTK"
         inlet_mesh = foam_path/"INLET/INLET_400.vtk"
         wall_mesh = foam_path/"WALL/WALL_400.vtk"
         inlet_mesh = pv.read(inlet_mesh)
