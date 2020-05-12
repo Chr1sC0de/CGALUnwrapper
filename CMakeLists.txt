@@ -32,7 +32,7 @@ if ( NOT Boost_FOUND )
 endif()
 
 # Eigen and components -----------------------------------------------------------------
-SET( EIGEN3_INCLUDE_DIR "C:/dev/Eigen3" )
+SET( EIGEN3_INCLUDE_DIR "$ENV{EIGEN3_INCLUDE_DIR}" )
 
 if ( EIGEN3_INCLUDE_DIR )
     include( ${EIGEN3_USE_FILE} )

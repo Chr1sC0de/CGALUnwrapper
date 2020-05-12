@@ -1,16 +1,16 @@
-The system is: Windows - 10.0.17763 - AMD64
+The system is: Windows - 10.0.18363 - AMD64
 Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
-Compiler: C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.24.28314/bin/Hostx64/x64/cl.exe 
+Compiler: C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.25.28610/bin/Hostx64/x64/cl.exe 
 Build flags: 
 Id flags:  
 
 The output was:
 0
-Microsoft (R) C/C++ Optimizing Compiler Version 19.24.28316 for x64
+Microsoft (R) C/C++ Optimizing Compiler Version 19.25.28614 for x64
 Copyright (C) Microsoft Corporation.  All rights reserved.
 
 CMakeCCompilerId.c
-Microsoft (R) Incremental Linker Version 14.24.28316.0
+Microsoft (R) Incremental Linker Version 14.25.28614.0
 Copyright (C) Microsoft Corporation.  All rights reserved.
 
 /out:CMakeCCompilerId.exe 
@@ -21,20 +21,20 @@ Compilation of the C compiler identification source "CMakeCCompilerId.c" produce
 
 Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.obj"
 
-The C compiler identification is MSVC, found in "D:/Github/CGALUnwrapper/build/CMakeFiles/3.16.3/CompilerIdC/CMakeCCompilerId.exe"
+The C compiler identification is MSVC, found in "D:/Github/CGALUnwrapper/build/CMakeFiles/3.17.2/CompilerIdC/CMakeCCompilerId.exe"
 
 Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
-Compiler: C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.24.28314/bin/Hostx64/x64/cl.exe 
+Compiler: C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.25.28610/bin/Hostx64/x64/cl.exe 
 Build flags: 
 Id flags:  
 
 The output was:
 0
-Microsoft (R) C/C++ Optimizing Compiler Version 19.24.28316 for x64
+Microsoft (R) C/C++ Optimizing Compiler Version 19.25.28614 for x64
 Copyright (C) Microsoft Corporation.  All rights reserved.
 
 CMakeCXXCompilerId.cpp
-Microsoft (R) Incremental Linker Version 14.24.28316.0
+Microsoft (R) Incremental Linker Version 14.25.28614.0
 Copyright (C) Microsoft Corporation.  All rights reserved.
 
 /out:CMakeCXXCompilerId.exe 
@@ -45,45 +45,45 @@ Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" p
 
 Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.obj"
 
-The CXX compiler identification is MSVC, found in "D:/Github/CGALUnwrapper/build/CMakeFiles/3.16.3/CompilerIdCXX/CMakeCXXCompilerId.exe"
+The CXX compiler identification is MSVC, found in "D:/Github/CGALUnwrapper/build/CMakeFiles/3.17.2/CompilerIdCXX/CMakeCXXCompilerId.exe"
 
 Determining if the C compiler works passed with the following output:
 Change Dir: D:/Github/CGALUnwrapper/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/PROGRA~2/MICROS~2/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_bd630 && [1/2] Building C object CMakeFiles\cmTC_bd630.dir\testCCompiler.c.obj
-[2/2] Linking C executable cmTC_bd630.exe
+Run Build Command(s):C:/PROGRA~2/MICROS~1/2019/COMMUN~1/Common7/IDE/COMMON~1/MICROS~1/CMake/Ninja/ninja.exe cmTC_5b5fa && [1/2] Building C object CMakeFiles\cmTC_5b5fa.dir\testCCompiler.c.obj
+[2/2] Linking C executable cmTC_5b5fa.exe
 
 
 
 Detecting C compiler ABI info compiled with the following output:
 Change Dir: D:/Github/CGALUnwrapper/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/PROGRA~2/MICROS~2/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_df3a8 && [1/2] Building C object CMakeFiles\cmTC_df3a8.dir\CMakeCCompilerABI.c.obj
-[2/2] Linking C executable cmTC_df3a8.exe
+Run Build Command(s):C:/PROGRA~2/MICROS~1/2019/COMMUN~1/Common7/IDE/COMMON~1/MICROS~1/CMake/Ninja/ninja.exe cmTC_c00ff && [1/2] Building C object CMakeFiles\cmTC_c00ff.dir\CMakeCCompilerABI.c.obj
+[2/2] Linking C executable cmTC_c00ff.exe
 
 
 
 Determining if the CXX compiler works passed with the following output:
 Change Dir: D:/Github/CGALUnwrapper/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/PROGRA~2/MICROS~2/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_2a657 && [1/2] Building CXX object CMakeFiles\cmTC_2a657.dir\testCXXCompiler.cxx.obj
-[2/2] Linking CXX executable cmTC_2a657.exe
+Run Build Command(s):C:/PROGRA~2/MICROS~1/2019/COMMUN~1/Common7/IDE/COMMON~1/MICROS~1/CMake/Ninja/ninja.exe cmTC_67aff && [1/2] Building CXX object CMakeFiles\cmTC_67aff.dir\testCXXCompiler.cxx.obj
+[2/2] Linking CXX executable cmTC_67aff.exe
 
 
 
 Detecting CXX compiler ABI info compiled with the following output:
 Change Dir: D:/Github/CGALUnwrapper/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/PROGRA~2/MICROS~2/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_ea8ce && [1/2] Building CXX object CMakeFiles\cmTC_ea8ce.dir\CMakeCXXCompilerABI.cpp.obj
-[2/2] Linking CXX executable cmTC_ea8ce.exe
+Run Build Command(s):C:/PROGRA~2/MICROS~1/2019/COMMUN~1/Common7/IDE/COMMON~1/MICROS~1/CMake/Ninja/ninja.exe cmTC_305f5 && [1/2] Building CXX object CMakeFiles\cmTC_305f5.dir\CMakeCXXCompilerABI.cpp.obj
+[2/2] Linking CXX executable cmTC_305f5.exe
 
 
 
 Performing C++ SOURCE FILE Test HAS_MSVC_GL_LTCG succeeded with the following output:
 Change Dir: D:/Github/CGALUnwrapper/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/PROGRA~2/MICROS~2/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_d2fd8 && [1/2] Building CXX object CMakeFiles\cmTC_d2fd8.dir\src.cxx.obj
-[2/2] Linking CXX executable cmTC_d2fd8.exe
+Run Build Command(s):C:/PROGRA~2/MICROS~1/2019/COMMUN~1/Common7/IDE/COMMON~1/MICROS~1/CMake/Ninja/ninja.exe cmTC_659e2 && [1/2] Building CXX object CMakeFiles\cmTC_659e2.dir\src.cxx.obj
+[2/2] Linking CXX executable cmTC_659e2.exe
 LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification
 Generating code
 Finished generating code

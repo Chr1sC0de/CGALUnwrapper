@@ -49,9 +49,9 @@ The CGAL windows installer can be found on the following release page [release p
 
 Historical versions of boost can be obtained from the [boost version history](https://www.boost.org/users/history/) page. So that CMake can locate the necessary folders the `BOOST_INCLUDEDIR=<boostDev>` and `BOOST_LIBRARYDIR=<boostDev>/libs` environment variables must be set,
 
-Versions of Eigen can be directly downloaded from the [home page](http://eigen.tuxfamily.org/index.php?title=Main_Page).
+Versions of Eigen can be directly downloaded from the [home page](http://eigen.tuxfamily.org/index.php?title=Main_Page). For Eigen to be visible to CMake we require the `EIGEN3_INCLUDE_DIR=<eigenDev>` to be set.
 
-VTK releases can be found on the VTK [downloads page](https://vtk.org/download/). The following video shows how to [compile VTK with Visual Studio](https://www.youtube.com/watch?v=IgvbhyDh8r0) for windows.
+VTK releases can be found on the VTK [downloads page](https://vtk.org/download/). The following video shows how to [compile VTK with Visual Studio](https://www.youtube.com/watch?v=IgvbhyDh8r0) for windows. For VTK to be visible to CMake we require `VTK_DIR=<vtkBuild>` to be set, where `<vtkBuild>` is the location of the location of the folder which contains the `VTKConfig.cmake` file.
 
 ## Compiling Code
 
