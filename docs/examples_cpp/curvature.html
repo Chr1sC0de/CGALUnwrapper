@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Calculating Surface Curvature &#8212; Chris Mamon 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Dijkstra’s Shortest Path" href="dijkstra_shortest_paths.html" />
+    <link rel="prev" title="Convert Mesh Properties To Buffer" href="convert_property_to_buffer.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="dijkstra_shortest_paths.html" title="Dijkstra’s Shortest Path"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="convert_property_to_buffer.html" title="Convert Mesh Properties To Buffer"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Chris Mamon 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../2_examples.html" accesskey="U">Examples</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="calculating-surface-curvature">
+<h1>Calculating Surface Curvature<a class="headerlink" href="#calculating-surface-curvature" title="Permalink to this headline">¶</a></h1>
+<p>We can calculate the principal curvatures via methods contained within the <cite>localDifferentiableProperties</cite>,</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;CGALMethods/IO/vtk.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;CGALMethods/shortestpaths/dijkstras_shortest_path.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;CGALMethods/localDifferentiableProperties/curvature.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;CGALMethods/property_buffer_vertices.hpp&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">CGALMethods</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">localDifferentiableProperties</span><span class="p">;</span>
+
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+
+   <span class="c1">// read the mesh</span>
+   <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">path</span><span class="p">(</span><span class="s">&quot;resources/WALL_400.vtk&quot;</span><span class="p">);</span>
+   <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">write_path</span><span class="p">(</span><span class="s">&quot;resources/WALL_400_written_curvature_normals.vtk&quot;</span><span class="p">);</span>
+
+   <span class="n">types</span><span class="o">::</span><span class="n">PairMeshVectorPairString_3</span> <span class="n">mesh_n_property_meta_data</span> <span class="o">=</span> <span class="n">IO</span><span class="o">::</span><span class="n">VTK</span><span class="o">::</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+   <span class="c1">// extract the mesh and meta data</span>
+   <span class="n">types</span><span class="o">::</span><span class="n">Mesh_3</span> <span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh_n_property_meta_data</span><span class="p">.</span><span class="n">first</span><span class="p">;</span>
+   <span class="n">types</span><span class="o">::</span><span class="n">VectorPairString</span> <span class="n">mesh_property_meta_data</span> <span class="o">=</span> <span class="n">mesh_n_property_meta_data</span><span class="p">.</span><span class="n">second</span><span class="p">;</span>
+
+   <span class="p">...</span>
+</pre></div>
+</div>
+<p>Curvature is calculated via Monge form jet fitting. After the mesh is input we supplym the degree of the fitted surface polynomial, the degree of
+the Monge coefficients and finally me we decide whether the surface normals point either inwards or outwards. By default the normals will point
+inwards, i.e. true.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>   <span class="n">types</span><span class="o">::</span><span class="n">VectorPairString</span> <span class="n">curvature_meta_data</span> <span class="o">=</span> <span class="n">curvature</span><span class="o">::</span><span class="n">monge</span><span class="o">::</span><span class="n">surface_mesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+
+   <span class="c1">// extract the curvature and normal data as buffers</span>
+   <span class="n">types</span><span class="o">::</span><span class="n">VectorDouble</span> <span class="n">maximum_curvature_buffer</span> <span class="o">=</span>
+      <span class="n">propertyBuffer</span><span class="o">::</span><span class="n">vertices</span><span class="o">::</span><span class="n">property</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">curvature_meta_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+   <span class="n">types</span><span class="o">::</span><span class="n">VectorDouble</span> <span class="n">minimum_curvature_buffer</span> <span class="o">=</span>
+      <span class="n">propertyBuffer</span><span class="o">::</span><span class="n">vertices</span><span class="o">::</span><span class="n">property</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">curvature_meta_data</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+
+   <span class="n">types</span><span class="o">::</span><span class="n">VectorDouble</span> <span class="n">normals_buffer</span> <span class="o">=</span> <span class="n">propertyBuffer</span><span class="o">::</span><span class="n">vertices</span><span class="o">::</span><span class="n">property</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">curvature_meta_data</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+
+   <span class="c1">// write the curvature and normal data as as vtk</span>
+   <span class="c1">// extend the vector</span>
+   <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">item</span><span class="p">:</span> <span class="n">curvature_meta_data</span><span class="p">){</span>
+      <span class="n">mesh_property_meta_data</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">item</span><span class="p">);</span>
+   <span class="p">}</span>
+   <span class="c1">// finally write out the entire data</span>
+   <span class="n">IO</span><span class="o">::</span><span class="n">VTK</span><span class="o">::</span><span class="n">write</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">write_path</span><span class="p">,</span> <span class="n">mesh_property_meta_data</span><span class="p">);</span>
+
+   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>When the curvature is calculated it is stored as a property map on the mesh.
+The meta data is returned such that the curvature can be extracted as a buffer via <cite>propertyBuffer</cite> methods.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="convert_property_to_buffer.html"
+                        title="previous chapter">Convert Mesh Properties To Buffer</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="dijkstra_shortest_paths.html"
+                        title="next chapter">Dijkstra’s Shortest Path</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/examples_cpp/curvature.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="dijkstra_shortest_paths.html" title="Dijkstra’s Shortest Path"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="convert_property_to_buffer.html" title="Convert Mesh Properties To Buffer"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Chris Mamon 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../2_examples.html" >Examples</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, CGALUnwrapper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0.
+    </div>
+  </body>
+</html>

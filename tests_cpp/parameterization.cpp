@@ -8,10 +8,12 @@ using namespace CGALMethods;
 using namespace localDifferentiableProperties;
 
 int main () {
-
-    std::string path("resources/WALL_400.vtk");
-    std::string write_path_0("resources/WALL_400_surface_mesh_parameterization_no_corners.vtk");
-    std::string write_path_1("resources/WALL_400_surface_mesh_parameterization_with_corners.vtk");
+    std::string resource_folder("D:/Github/CGALUnwrapper/resources");
+    std::string path(resource_folder + "/WALL_400.vtk");
+    std::string write_path_0(
+        resource_folder + "/WALL_400_surface_mesh_parameterization_no_corners.vtk");
+    std::string write_path_1(
+        resource_folder + "/WALL_400_surface_mesh_parameterization_with_corners.vtk");
 
     types::PairMeshVectorPairString_3 mesh_n_property_meta_data = IO::VTK::read(path);
     types::Mesh_3 mesh = mesh_n_property_meta_data.first;
@@ -34,7 +36,7 @@ int main () {
     types::PairMeshVectorPairString_3 cylinder_mesh_flat_data =
         parameterization::cylindrical_mesh_parameteriztion_square_authalic(mesh, property_meta_data);
 
-    types::Mesh_3 cylinder_mesh_flat = cylinder_mesh_flat_data.first;
+    types::Mesh_3 cylinder_mesh_flat   = cylinder_mesh_flat_data.first;
     types::VectorPairString  meta_flat = cylinder_mesh_flat_data.second;
 
     IO::VTK::write(
@@ -55,7 +57,8 @@ int main () {
     }
 
     types::PairMeshVectorPairString_3 cylinder_mesh_flat_test =
-        parameterization::cylindrical_mesh_parameteriztion_square_authalic(mesh, property_meta_data, {-15.5092535, -10.966625 , -21.51544});
+        parameterization::cylindrical_mesh_parameteriztion_square_authalic(
+            mesh, property_meta_data, {-15.5092535, -10.966625 , -21.51544});
 
     types::Mesh_3 flat_w_curve = cylinder_mesh_flat_test.first;
     types::VectorPairString meta_flat_w_curve = cylinder_mesh_flat_test.second;

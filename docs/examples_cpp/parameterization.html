@@ -1,0 +1,150 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Parameterizating a Mesh &#8212; Chris Mamon 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Read and Write VTK to/from CGALMesh" href="../examples_python/python_read_vtk.html" />
+    <link rel="prev" title="Boundary Detection" href="boundary_detection.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../examples_python/python_read_vtk.html" title="Read and Write VTK to/from CGALMesh"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="boundary_detection.html" title="Boundary Detection"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Chris Mamon 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../2_examples.html" accesskey="U">Examples</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="parameterizating-a-mesh">
+<h1>Parameterizating a Mesh<a class="headerlink" href="#parameterizating-a-mesh" title="Permalink to this headline">¶</a></h1>
+<p>For visualizing the insides of the coronart artery it might be of interest to unwrap the vessel for easy visualization.
+To parameterize the mesh as a square,</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;CGALMethods/parameterization/surfacemesh/square.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;CGALMethods/parameterization/seam_mesh/square.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;CGALMethods/IO/vtk.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;CGALMethods/parameterization/cylindrical_mesh_unwrapper.hpp&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">CGALMethods</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">()</span> <span class="p">{</span>
+
+   <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">path</span><span class="p">(</span><span class="s">&quot;resources/WALL_400.vtk&quot;</span><span class="p">);</span>
+   <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">write_path_0</span><span class="p">(</span><span class="s">&quot;resources/WALL_400_surface_mesh_parameterization_no_corners.vtk&quot;</span><span class="p">);</span>
+   <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">write_path_1</span><span class="p">(</span><span class="s">&quot;resources/WALL_400_surface_mesh_parameterization_with_corners.vtk&quot;</span><span class="p">);</span>
+
+   <span class="n">types</span><span class="o">::</span><span class="n">PairMeshVectorPairString_3</span> <span class="n">mesh_n_property_meta_data</span> <span class="o">=</span> <span class="n">IO</span><span class="o">::</span><span class="n">VTK</span><span class="o">::</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+   <span class="n">types</span><span class="o">::</span><span class="n">Mesh_3</span> <span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh_n_property_meta_data</span><span class="p">.</span><span class="n">first</span><span class="p">;</span>
+   <span class="n">types</span><span class="o">::</span><span class="n">VectorPairString</span> <span class="n">property_meta_data</span> <span class="o">=</span> <span class="n">mesh_n_property_meta_data</span><span class="p">.</span><span class="n">second</span><span class="p">;</span>
+
+   <span class="c1">// parameterize a mesh without any specified corners</span>
+   <span class="c1">// observe that we cannot get the desire parameterization thus we must must define a seam</span>
+
+   <span class="n">types</span><span class="o">::</span><span class="n">PairString</span> <span class="n">meta_uv</span> <span class="o">=</span> <span class="n">parameterization</span><span class="o">::</span><span class="n">surfacemesh</span><span class="o">::</span><span class="n">square</span><span class="o">::</span><span class="n">authalic</span><span class="o">::</span><span class="n">parameterize</span><span class="p">(</span><span class="n">mesh</span><span class="p">);</span>
+   <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">types</span><span class="o">::</span><span class="n">Mesh_3</span><span class="p">,</span> <span class="n">types</span><span class="o">::</span><span class="n">VectorPairString</span><span class="o">&gt;</span> <span class="n">parameterized_mesh_n_meta</span> <span class="o">=</span>
+      <span class="n">parameterization</span><span class="o">::</span><span class="n">surfacemesh</span><span class="o">::</span><span class="n">make_mesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">meta_uv</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">property_meta_data</span><span class="p">);</span>
+
+   <span class="n">IO</span><span class="o">::</span><span class="n">VTK</span><span class="o">::</span><span class="n">write</span><span class="p">(</span>
+      <span class="n">parameterized_mesh_n_meta</span><span class="p">.</span><span class="n">first</span><span class="p">,</span>
+      <span class="n">write_path_0</span><span class="p">,</span>
+      <span class="n">parameterized_mesh_n_meta</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
+ <span class="p">...</span>
+</pre></div>
+</div>
+<p>nonetheless we observe that the parameterization is less than ideal. Thus we must generate a seam along the mesh and alog the seam
+specify a set of corners such that we can perform an unwrapping. We have currently implemented an automatic method for cylindrical surfacemeshes,</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// parameterize a mesh using pre-defined cylindrical mesh parameterizer, in this method a seam mesh is generated</span>
+<span class="c1">// and along the seam mesh the coner vertices are specified. From there the surface is parameterized</span>
+ <span class="n">types</span><span class="o">::</span><span class="n">PairMeshVectorPairString_3</span> <span class="n">cylinder_mesh_flat_data</span> <span class="o">=</span>
+     <span class="n">parameterization</span><span class="o">::</span><span class="n">cylindrical_mesh_parameteriztion_square_authalic</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">property_meta_data</span><span class="p">);</span>
+
+ <span class="n">types</span><span class="o">::</span><span class="n">Mesh_3</span> <span class="n">cylinder_mesh_flat</span> <span class="o">=</span> <span class="n">cylinder_mesh_flat_data</span><span class="p">.</span><span class="n">first</span><span class="p">;</span>
+ <span class="n">types</span><span class="o">::</span><span class="n">VectorPairString</span>  <span class="n">meta_flat</span> <span class="o">=</span> <span class="n">cylinder_mesh_flat_data</span><span class="p">.</span><span class="n">second</span><span class="p">;</span>
+
+ <span class="n">IO</span><span class="o">::</span><span class="n">VTK</span><span class="o">::</span><span class="n">write</span><span class="p">(</span>
+     <span class="n">cylinder_mesh_flat</span><span class="p">,</span>
+     <span class="n">write_path_1</span><span class="p">,</span>
+     <span class="n">meta_flat</span><span class="p">);;</span>
+</pre></div>
+</div>
+<p>We observe that the mesh is now parameterized over a square where the inlet and the outlet take one of the edges</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="boundary_detection.html"
+                        title="previous chapter">Boundary Detection</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../examples_python/python_read_vtk.html"
+                        title="next chapter">Read and Write VTK to/from CGALMesh</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/examples_cpp/parameterization.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../examples_python/python_read_vtk.html" title="Read and Write VTK to/from CGALMesh"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="boundary_detection.html" title="Boundary Detection"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Chris Mamon 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../2_examples.html" >Examples</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, CGALUnwrapper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0.
+    </div>
+  </body>
+</html>

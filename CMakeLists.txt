@@ -104,11 +104,11 @@ foreach(file ${test_files})
 endforeach()
 
 #copy the build files to the  pyton directory
-set(CGALBindings_pyd "${PROJECT_SOURCE_DIR}/build/CGALMethods.cp37-win_amd64.pyd")
-set(CGALBindings_pdb "${PROJECT_SOURCE_DIR}/build/CGALMethods.pdb")
-set(CGALBindings_destination_tests "${PROJECT_SOURCE_DIR}/tests_python/CGALMethods")
+# set(CGALBindings_pyd "${PROJECT_SOURCE_DIR}/build/CGALMethods.*.pyd")
+# set(CGALBindings_pdb "${PROJECT_SOURCE_DIR}/build/CGALMethods*.pdb")
+# set(CGALBindings_destination_tests "${PROJECT_SOURCE_DIR}/tests_python/CGALMethods")
 
-add_custom_command(
-  TARGET CGALMethods POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy ${CGALBindings_pyd} ${CGALBindings_pdb} ${CGALBindings_destination_tests}
-)
+# add_custom_command(
+#   TARGET CGALMethods POST_BUILD
+#   COMMAND ${CMAKE_COMMAND} -E copy ${CGALBindings_pyd} ${CGALBindings_pdb} ${CGALBindings_destination_tests}
+# )

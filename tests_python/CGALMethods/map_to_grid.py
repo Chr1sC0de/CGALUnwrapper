@@ -2,52 +2,62 @@ import numpy as np
 from scipy.interpolate import LinearNDInterpolator
 
 def map_parameterized_mesh_to_grid(mesh, npts_x=384, npts_y=256):
+    """For some parameterized mesh, map the mesh onto a grid. Outputs a dictionary
+    containing the parameterized data.
 
-        mesh_points = mesh.points()
+    Args:
+        mesh ([type]): [description]
+        npts_x (int, optional): [description]. Defaults to 384.
+        npts_y (int, optional): [description]. Defaults to 256.
 
-        spacing_y = 1/npts_y
+    Returns:
+        [type]: [description]
+    """
+    mesh_points = mesh.points()
 
-        XX, YY = np.meshgrid(
-            np.linspace(0, 1, npts_x), np.linspace(spacing_y, 1, npts_y))
+    spacing_y = 1/npts_y
 
-        x = XX.flatten()
-        y = YY.flatten()
+    XX, YY = np.meshgrid(
+        np.linspace(0, 1, npts_x), np.linspace(spacing_y, 1, npts_y))
 
-        xy = np.stack([x, y], axis=-1)
+    x = XX.flatten()
+    y = YY.flatten()
 
-        property_maps = [
-            mesh.get_property(name) for name in mesh.property_names()]
+    xy = np.stack([x, y], axis=-1)
 
-        name_shape_list = [
-            (name, prop.shape[-1]) for name, prop in
-            zip(mesh.property_names(), property_maps)
-        ]
+    property_maps = [
+        mesh.get_property(name) for name in mesh.property_names()]
 
-        property_maps = np.concatenate(property_maps, axis=-1)
+    name_shape_list = [
+        (name, prop.shape[-1]) for name, prop in
+        zip(mesh.property_names(), property_maps)
+    ]
 
-        interpolator = LinearNDInterpolator(
-                mesh_points[:, 0:2], property_maps
-        )
+    property_maps = np.concatenate(property_maps, axis=-1)
 
-        interpolated = interpolator(xy)
+    interpolator = LinearNDInterpolator(
+            mesh_points[:, 0:2], property_maps
+    )
 
-        interpolated = interpolated.reshape(
-            npts_x, npts_y, interpolated.shape[-1], order='F')
+    interpolated = interpolator(xy)
 
-        interpolated = interpolated.swapaxes(0, -1)
+    interpolated = interpolated.reshape(
+        npts_x, npts_y, interpolated.shape[-1], order='F')
 
-        # close the artery
-        # interpolated[:, -1, :] = interpolated[:, 0, :]
+    interpolated = interpolated.swapaxes(0, -1)
 
-        output = {}
+    # close the artery
 
-        counter = 0
-        for name, shape in name_shape_list:
-            output[name[2:]] = interpolated[counter:(counter+shape), :, :]
-            counter += shape
+    output = {}
 
-        parameterized_points = np.stack([XX,YY], axis=0)
+    counter = 0
+    for name, shape in name_shape_list:
+        output[name[2:]] = interpolated[counter:(counter+shape), :, :]
+        counter += shape
 
-        output['param_points'] = parameterized_points
+    ZZ = np.zeros_like(XX)
 
-        return output
+    parameterized_points = np.stack([XX, YY, ZZ], axis=0)
+    output['param_points'] = parameterized_points
+
+    return output

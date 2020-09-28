@@ -1,8 +1,8 @@
 Unwrapping Many Cylindrical Meshes
 ----------------------------------
 
-It might be necessary to bulk unwrap and map to a structured grid a number of meshes. To do so we can apply
-the python multiprocessing library,
+It might be necessary to bulk unwrap and map to a structured grid a number of meshes.
+To do so we can apply the python multiprocessing library,
 
 .. code-block:: python
 
@@ -38,8 +38,9 @@ The general overview of the program will look as follows,
       [p.start() for p in processors]
       [p.join() for p in processors]
 
-To allow for proper multiprocessing within python the `if __name__ == "__main__"` guard is necessary.
-Before implementing our multiprocessing scheme we need to divide our list of cases. Bellow we show an example chunkIt method,
+To allow for proper multiprocessing within python the `if __name__ == "__main__"`
+guard is necessary. Before implementing our multiprocessing scheme we need to divide
+our list of cases. Bellow we show an example chunkIt method,
 
 .. code-block:: python
 
@@ -90,7 +91,10 @@ example code which extracts our artery data, unwraps the artery and maps it to a
       gridded = CM.map_parameterized_mesh_to_grid(unwrapped)
 
       output = {}
-      # now scale the data such theat the neural network can obtain the data in the correct size
+
+      # now scale the data such theat the neural network can obtain the
+      # data in the correct size
+
       max_k = gridded['maximum_curvature'] / 1000
       min_k = gridded['minimum_curvature'] / 1000
 
@@ -110,7 +114,8 @@ example code which extracts our artery data, unwraps the artery and maps it to a
 
       unwrapped.write_vtk((savefolder/(folder_name+".vtk")).as_posix())
 
-Once we have generate the main method we need a function which acts as the target to our multiprocessing method
+Once we have generate the main method we need a function which acts as the target to
+our multiprocessing method
 
 .. code-block:: python
 

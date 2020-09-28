@@ -115,6 +115,35 @@ PYBIND11_MODULE(CGALMethods, m){
         )
     ;
 
+    m.def("unwrap_cylindrical_surface_mesh", [](
+                CM::bound::SurfaceMesh & wrapped_mesh,
+                double x_1,
+                double y_1,
+                double z_1,
+                double x_2,
+                double y_2,
+                double z_2
+            ){
+                tps::Point_3 inlet_origin(x_1, y_1, z_1);
+                tps::Point_3 outlet_origin(x_2, y_2, z_2);
+
+                tps::VectorPairString property_name_types = wrapped_mesh.get_vector_property_name_type();
+
+                tps::PairMeshVectorPairString_3 cylinder_mesh_flat_data =
+                    CM::parameterization::cylindrical_mesh_parameteriztion_square_authalic(
+                        wrapped_mesh.data, property_name_types, inlet_origin, outlet_origin);
+
+                CM::bound::SurfaceMesh surface_mesh(
+                    cylinder_mesh_flat_data.first,
+                    cylinder_mesh_flat_data.second
+                );
+
+                return surface_mesh;
+
+            }
+        )
+    ;
+
 }
 
 
