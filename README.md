@@ -111,10 +111,10 @@ The module depends on the pymethods library "link here"
 
 ## Examples
 
-Unwrapping with a bifurcation
+Unwrapping without a bifurcation
 
 ![alt](./images/unwrapping.PNG)
 
-and without a bifurcation
+and with a bifurcation
 
 ![alt](./images/unwrapping_bifurcation.PNG)
