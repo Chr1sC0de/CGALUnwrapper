@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Heat Method &#8212; Chris Mamon 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Boundary Detection" href="boundary_detection.html" />
+    <link rel="prev" title="Dijkstra’s Shortest Path" href="dijkstra_shortest_paths.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="boundary_detection.html" title="Boundary Detection"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="dijkstra_shortest_paths.html" title="Dijkstra’s Shortest Path"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Chris Mamon 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../2_examples.html" accesskey="U">Examples</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="heat-method">
+<h1>Heat Method<a class="headerlink" href="#heat-method" title="Permalink to this headline">¶</a></h1>
+<p>The heat method estimates the shortest distance along a manifold of all vertices to a set of source vertices.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;CGALMethods/IO/vtk.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;CGALMethods/shortestpaths/heatmethod.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;CGALMethods/shortestpaths/dijkstras_shortest_path.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;CGALMethods/utils.hpp&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">CGALMethods</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">shortestpaths</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+
+   <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">path</span><span class="p">(</span><span class="s">&quot;resources/WALL_400.vtk&quot;</span><span class="p">);</span>
+
+   <span class="n">types</span><span class="o">::</span><span class="n">PairMeshVectorPairString_3</span> <span class="n">mesh_n_property_meta_data</span> <span class="o">=</span> <span class="n">IO</span><span class="o">::</span><span class="n">VTK</span><span class="o">::</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+   <span class="n">types</span><span class="o">::</span><span class="n">Mesh_3</span> <span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh_n_property_meta_data</span><span class="p">.</span><span class="n">first</span><span class="p">;</span>
+   <span class="n">types</span><span class="o">::</span><span class="n">VectorPairString</span> <span class="n">property_meta_data</span> <span class="o">=</span> <span class="n">mesh_n_property_meta_data</span><span class="p">.</span><span class="n">second</span><span class="p">;</span>
+
+<span class="p">...</span>
+</pre></div>
+</div>
+<p>once the mesh has been loaded to calculate the shortest distance from a set of vertices,</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// find the distances from a set of sources</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">path_write</span><span class="p">(</span><span class="s">&quot;resources/WALL_400_write_heatmethod_sources.vtk&quot;</span><span class="p">);</span>
+
+<span class="n">types</span><span class="o">::</span><span class="n">VectorVertexindex_3</span> <span class="n">sources_0</span><span class="p">;</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">1000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+   <span class="n">sources_0</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">types</span><span class="o">::</span><span class="n">Vertexindex_3</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="n">types</span><span class="o">::</span><span class="n">PairString</span> <span class="n">heat_meta_0</span> <span class="o">=</span> <span class="n">heatmethod</span><span class="o">::</span><span class="n">map_vertex_distances_to_sources</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">sources_0</span><span class="p">,</span> <span class="s">&quot;v:heat_method&quot;</span><span class="p">);</span>
+
+<span class="n">property_meta_data</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">heat_meta_0</span><span class="p">);</span>
+
+<span class="n">IO</span><span class="o">::</span><span class="n">VTK</span><span class="o">::</span><span class="n">write</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">path_write</span><span class="p">,</span> <span class="n">property_meta_data</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>if we deisre the two closest points between two sets of sources</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// find the closest vertices between two sets of sources</span>
+
+<span class="n">types</span><span class="o">::</span><span class="n">VectorVertexindex_3</span> <span class="n">sources_1</span><span class="p">;</span>
+<span class="n">types</span><span class="o">::</span><span class="n">VectorVertexindex_3</span> <span class="n">sources_2</span><span class="p">;</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">100</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+   <span class="n">sources_1</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">types</span><span class="o">::</span><span class="n">Vertexindex_3</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+   <span class="n">sources_2</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">types</span><span class="o">::</span><span class="n">Vertexindex_3</span><span class="p">((</span><span class="n">i</span><span class="o">+</span><span class="mi">5</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="p">));</span>
+
+<span class="p">}</span>
+
+<span class="n">types</span><span class="o">::</span><span class="n">TupleVertexVertexUmapvertex_3</span> <span class="n">vertices_and_predecessor_maps</span> <span class="o">=</span>
+   <span class="n">heatmethod</span><span class="o">::</span><span class="n">closest_vertex_pair_between_sources</span><span class="p">(</span>
+      <span class="n">mesh</span><span class="p">,</span> <span class="n">sources_1</span><span class="p">,</span> <span class="n">sources_2</span>
+   <span class="p">);</span>
+
+<span class="n">types</span><span class="o">::</span><span class="n">Vertexindex_3</span> <span class="n">source_1_vertex</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">vertices_and_predecessor_maps</span><span class="p">);</span>
+<span class="n">types</span><span class="o">::</span><span class="n">Vertexindex_3</span> <span class="n">source_2_vertex</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">(</span><span class="n">vertices_and_predecessor_maps</span><span class="p">);</span>
+<span class="n">types</span><span class="o">::</span><span class="n">UmapVertexindex_3</span> <span class="n">predecessor_map</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">(</span><span class="n">vertices_and_predecessor_maps</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>If we desire the shortest path between the two sources we can query the <cite>predecessor_map</cite>.
+Alternatively the <cite>heatmethod::shortest_path_between_source_pair</cite> method can extract the
+path directly from the tuple of the vertices and predecessor_map,</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// if a vertex and predecessor map has been pre-calculated get the shortest path between the two vertices</span>
+
+<span class="n">types</span><span class="o">::</span><span class="n">VectorVertexindex_3</span> <span class="n">shortest_path_between_sources_with_map</span> <span class="o">=</span>
+   <span class="n">heatmethod</span><span class="o">::</span><span class="n">shortest_path_between_source_pair</span><span class="p">(</span>
+      <span class="n">vertices_and_predecessor_maps</span>
+   <span class="p">);</span>
+</pre></div>
+</div>
+<p>to directoy obtain the shortest path between the two sources the mesh and source sets can be passed in
+as an alternative,</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// if the verex and predecessor map has not been calculate</span>
+<span class="n">types</span><span class="o">::</span><span class="n">VectorVertexindex_3</span> <span class="n">shortest_path_between_sources_no_map</span> <span class="o">=</span>
+   <span class="n">heatmethod</span><span class="o">::</span><span class="n">shortest_path_between_source_pair</span><span class="p">(</span>
+      <span class="n">mesh</span><span class="p">,</span> <span class="n">sources_1</span><span class="p">,</span> <span class="n">sources_2</span>
+   <span class="p">);</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="dijkstra_shortest_paths.html"
+                        title="previous chapter">Dijkstra’s Shortest Path</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="boundary_detection.html"
+                        title="next chapter">Boundary Detection</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/examples_cpp/heat_method.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="boundary_detection.html" title="Boundary Detection"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="dijkstra_shortest_paths.html" title="Dijkstra’s Shortest Path"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Chris Mamon 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../2_examples.html" >Examples</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, CGALUnwrapper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0.
+    </div>
+  </body>
+</html>

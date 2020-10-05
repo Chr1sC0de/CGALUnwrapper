@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Reading and Writing VTK to/from CGALMesh &#8212; Chris Mamon 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Convert Mesh Properties To Buffer" href="convert_property_to_buffer.html" />
+    <link rel="prev" title="Examples" href="../2_examples.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="convert_property_to_buffer.html" title="Convert Mesh Properties To Buffer"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../2_examples.html" title="Examples"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Chris Mamon 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../2_examples.html" accesskey="U">Examples</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="reading-and-writing-vtk-to-from-cgalmesh">
+<h1>Reading and Writing VTK to/from CGALMesh<a class="headerlink" href="#reading-and-writing-vtk-to-from-cgalmesh" title="Permalink to this headline">¶</a></h1>
+<p>Data from openfoam can be exported into multiple file formats. One such format is the VTK (legacy) format.
+The following code shows how we can read data from the resulting vtk in CGAL using c++,</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;CGALMethods/IO/vtk.hpp&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">CGALMethods</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">path</span><span class="p">(</span><span class="s">&quot;resources/WALL_400.vtk&quot;</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">write_path</span><span class="p">(</span><span class="s">&quot;resources/WALL_400_written.vtk&quot;</span><span class="p">);</span>
+
+    <span class="n">types</span><span class="o">::</span><span class="n">PairMeshVectorPairString_3</span> <span class="n">mesh_n_property_meta_data</span> <span class="o">=</span> <span class="n">IO</span><span class="o">::</span><span class="n">VTK</span><span class="o">::</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+
+    <span class="n">types</span><span class="o">::</span><span class="n">Mesh_3</span> <span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh_n_property_meta_data</span><span class="p">.</span><span class="n">first</span><span class="p">;</span>
+
+    <span class="n">types</span><span class="o">::</span><span class="n">VectorPairString</span> <span class="n">property_meta_data</span> <span class="o">=</span> <span class="n">mesh_n_property_meta_data</span><span class="p">.</span><span class="n">second</span><span class="p">;</span>
+
+    <span class="n">IO</span><span class="o">::</span><span class="n">VTK</span><span class="o">::</span><span class="n">write</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">write_path</span><span class="p">,</span> <span class="n">property_meta_data</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In CGAL properties stored on the vertices and faces are stored as property maps. The ‘property_meta_data’ is
+a VectorPairString, i.e. a vector of pairs of strings where for each pair the first element is the property
+name and the second element is the property type contained in IO namespace, and the following types
+are curently implemented,</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">namespace</span> <span class="n">CGALMethods</span><span class="p">{</span>
+<span class="k">namespace</span> <span class="n">IO</span> <span class="p">{</span>
+
+    <span class="n">string</span> <span class="n">VERTEXSCALARMAP</span> <span class="o">=</span> <span class="s">&quot;VertexScalarMap&quot;</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">VERTEXVECTORMAP</span> <span class="o">=</span> <span class="s">&quot;VertexVectorMap&quot;</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">VERTEXSINGLEPOINTMAP</span> <span class="o">=</span> <span class="s">&quot;VertexSinglePointMap&quot;</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">VERTEXCGALVECTOR3MAP</span> <span class="o">=</span> <span class="s">&quot;VertexCGALVector3Map&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>for example to meta data required to extract the wall shear stress along the wall of the surface,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">types</span><span class="p">::</span><span class="n">VectorPairString</span> <span class="n">property_meta_data</span>
+<span class="n">PairString</span> <span class="n">magWallShearStressMeta</span><span class="p">(</span><span class="s2">&quot;v:magWallShearStress&quot;</span><span class="p">,</span> <span class="n">IO</span><span class="p">::</span><span class="n">VERTEXSCALARMAP</span><span class="p">);</span>
+<span class="n">property_meta_data</span><span class="o">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">magWallShearStressMeta</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>some times we may wish to scale the data on input. We can prove a scaling factor to the read method
+in order to convert our input data from metres to mm,</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">write_path_scaled</span><span class="p">(</span><span class="s">&quot;resources/WALL_400_written_scaled.vtk&quot;</span><span class="p">);</span>
+<span class="n">types</span><span class="o">::</span><span class="n">PairMeshVectorPairString_3</span> <span class="n">mesh_n_property_meta_data_scaled</span> <span class="o">=</span> <span class="n">IO</span><span class="o">::</span><span class="n">VTK</span><span class="o">::</span><span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="mi">1000</span><span class="p">);</span>
+<span class="n">types</span><span class="o">::</span><span class="n">Mesh_3</span> <span class="n">mesh_scaled</span>  <span class="o">=</span> <span class="n">mesh_n_property_meta_data_scaled</span> <span class="p">.</span><span class="n">first</span><span class="p">;</span>
+<span class="n">types</span><span class="o">::</span><span class="n">VectorPairString</span> <span class="n">property_meta_data_scaled</span>  <span class="o">=</span> <span class="n">mesh_n_property_meta_data_scaled</span> <span class="p">.</span><span class="n">second</span><span class="p">;</span>
+<span class="n">IO</span><span class="o">::</span><span class="n">VTK</span><span class="o">::</span><span class="n">write</span><span class="p">(</span><span class="n">mesh_scaled</span><span class="p">,</span> <span class="n">write_path_scaled</span><span class="p">,</span> <span class="n">property_meta_data_scaled</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../2_examples.html"
+                        title="previous chapter">Examples</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="convert_property_to_buffer.html"
+                        title="next chapter">Convert Mesh Properties To Buffer</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/examples_cpp/cpp_read_vtk.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="convert_property_to_buffer.html" title="Convert Mesh Properties To Buffer"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../2_examples.html" title="Examples"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Chris Mamon 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../2_examples.html" >Examples</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, CGALUnwrapper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0.
+    </div>
+  </body>
+</html>
