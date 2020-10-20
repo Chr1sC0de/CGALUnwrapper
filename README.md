@@ -1,6 +1,6 @@
 # ArteryUnwrapper
 
-Code used for unwrapping segments of the coronary artery onto a 2D Euclidean grid
+Code used for unwrapping segments of the coronary artery onto a 2D Euclidean grid.
 
 ## Examples
 
