@@ -1,7 +1,9 @@
 # ArteryUnwrapper
 
-The unwrapping of our artery to a Euclidean grid is essentially a
-re-meshing procedure over a fixed border parameterization.
+The unwrapping of the coronary artery to a Euclidean grid is useful for both research on haemodynamic interactions with the coronary wall 
+and deep learning. The following code provides tools for both unwrapping the artery and extracting the centreline.
+
+The procedure is essentially a re-meshing over a fixed border parameterization.
 Commonly, such a remeshing procedure involves three stages. Initially, a border for
 the parameterization is decided. Afterwards, a piecewise linear mapping <img
 src="https://render.githubusercontent.com/render/math?math=\Psi"> is constructed
