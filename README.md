@@ -1,17 +1,5 @@
 # ArteryUnwrapper
 
-Code used for unwrapping segments of the coronary artery onto a 2D Euclidean grid.
-
-## Examples
-
-Unwrapping without a bifurcation
-
-![alt](./images/unwrapping.PNG)
-
-and with a bifurcation
-
-![alt](./images/unwrapping_bifurcation.PNG)
-
 The unwrapping of our artery to a Euclidean grid is essentially a
 re-meshing procedure over a fixed border parameterization.
 Commonly, such a remeshing procedure involves three stages. Initially, a border for
@@ -49,6 +37,16 @@ the area distortion. After the mapping is completed re-meshing can then be perfo
 by barycentrically interpolating, the properties of <img
 src="https://render.githubusercontent.com/render/math?math=$M$"> over <img
 src="https://render.githubusercontent.com/render/math?math=$U$">.
+
+## Examples
+
+Unwrapping without a bifurcation
+
+![alt](./images/unwrapping.PNG)
+
+and with a bifurcation
+
+![alt](./images/unwrapping_bifurcation.PNG)
 
 website docs https://chr1sc0de.github.io/CGALUnwrapper/.
 
